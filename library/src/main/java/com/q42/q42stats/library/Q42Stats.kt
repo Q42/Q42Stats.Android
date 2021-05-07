@@ -8,6 +8,7 @@ import org.json.JSONObject
 import java.io.Serializable
 
 const val TAG = "Q42Stats"
+const val SUBMIT_INTERVAL_MILLIS = 60 * 60 * 24 * 1000L
 
 class Q42Stats {
     val name = "Q42 Stats lib"
@@ -15,8 +16,18 @@ class Q42Stats {
     /* Collects stats and sends it to the server */
     fun run(context: Context) {
         try {
+            val prefs = Q42StatsPrefs(context)
+            if (prefs.withinSubmitInterval(SUBMIT_INTERVAL_MILLIS) && !BuildConfig.DEBUG) {
+                Log.d(
+                    TAG,
+                    "Q42Stats were already sent in the last ${SUBMIT_INTERVAL_MILLIS / 1000} seconds. Exit. "
+                )
+                return
+            }
             val collected = collect(context)
             HttpService.sendStats(JSONObject(collected as Map<*, *>))
+            prefs.updateSubmitTimestamp()
+
         } catch (e: Throwable) {
             Log.e(TAG, "Q42Stats encountered an error", e)
             if (BuildConfig.DEBUG) {
