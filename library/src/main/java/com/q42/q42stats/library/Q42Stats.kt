@@ -24,7 +24,7 @@ class Q42Stats {
                 )
                 return
             }
-            val collected = collect(context)
+            val collected = collect(context, prefs)
             HttpService.sendStats(JSONObject(collected as Map<*, *>))
             prefs.updateSubmitTimestamp()
 
@@ -36,8 +36,13 @@ class Q42Stats {
         }
     }
 
-    private fun collect(context: Context): MutableMap<String, Serializable> {
+    private fun collect(context: Context, prefs: Q42StatsPrefs): MutableMap<String, Serializable> {
         val collected = mutableMapOf<String, Serializable>()
+
+        collected["Stats Version"] = "Android ${BuildConfig.LIB_BUILD_DATE}"
+        collected["Stats instance ID"] = prefs.getOrCreateInstallationId()
+        collected["Stats timestamp"] = System.currentTimeMillis() / 1000L
+
         collected += AccessibilityCollector.collect(context)
         collected += SystemCollector.collect()
         return collected
