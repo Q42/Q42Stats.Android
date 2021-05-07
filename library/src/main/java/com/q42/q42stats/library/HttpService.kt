@@ -27,15 +27,9 @@ object HttpService {
             setPostRequestContent(conn, jsonObject)
             conn.connect()
 
-            Log.d(TAG, "${conn.responseCode} ${conn.responseMessage}")
+            Log.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
         }
     }
-//
-//    private fun checkNetworkConnection(context: Context): Boolean {
-//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-//        return activeNetwork?.isConnectedOrConnecting == true
-//    }
 
     @Throws(IOException::class)
     private fun setPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject) {
@@ -43,7 +37,7 @@ object HttpService {
         val os = conn.outputStream
         val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
         writer.write(jsonObject.toString())
-        Log.i(TAG, jsonObject.toString())
+        Log.d(TAG, "Sending JSON: $jsonObject")
         writer.flush()
         writer.close()
         os.close()

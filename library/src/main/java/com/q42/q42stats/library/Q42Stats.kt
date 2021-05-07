@@ -16,7 +16,6 @@ class Q42Stats {
     fun run(context: Context) {
         try {
             val collected = collect(context)
-            Log.d(TAG, "Collected $collected")
             HttpService.sendStats(JSONObject(collected as Map<*, *>))
         } catch (e: Throwable) {
             Log.e(TAG, "Q42Stats encountered an error", e)
