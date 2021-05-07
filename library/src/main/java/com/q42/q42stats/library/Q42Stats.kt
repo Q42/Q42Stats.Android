@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.SystemCollector
+import org.json.JSONObject
+import java.io.Serializable
 
 const val TAG = "Q42Stats"
 
@@ -15,6 +17,7 @@ class Q42Stats {
         try {
             val collected = collect(context)
             Log.d(TAG, "Collected $collected")
+            HttpService.sendStats(JSONObject(collected as Map<*, *>))
         } catch (e: Throwable) {
             Log.e(TAG, "Q42Stats encountered an error", e)
             if (BuildConfig.DEBUG) {
@@ -23,8 +26,8 @@ class Q42Stats {
         }
     }
 
-    private fun collect(context: Context): MutableMap<String, Any> {
-        val collected = mutableMapOf<String, Any>()
+    private fun collect(context: Context): MutableMap<String, Serializable> {
+        val collected = mutableMapOf<String, Serializable>()
         collected += AccessibilityCollector.collect(context)
         collected += SystemCollector.collect()
         return collected

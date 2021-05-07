@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Disallow any HTTP traffic. This option is false by default Starting with Android 9. -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Required if we want to use Charles proxy (or any other proxy) for debugging on Android N and higher, see: https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/-->
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
