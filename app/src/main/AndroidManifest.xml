@@ -4,6 +4,7 @@
     package="com.q42.q42stats.sample">
 
     <application
+        android:name=".SampleApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
