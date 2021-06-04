@@ -4,6 +4,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        adhoc {
+            storeFile file('../adhoc.jks')
+            storePassword 'q42stats'
+            keyAlias 'q42stats'
+            keyPassword 'q42stats'
+        }
+        // since this is just a demo app, we don't need a release config for the Play Store
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -14,13 +23,29 @@ android {
         versionCode 1
         versionName "1.0"
 
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+        preRelease {
+            minifyEnabled true
+            signingConfig signingConfigs.adhoc
+            debuggable false
+        }
+        // this demo app is not intended for release to the store. The release buildType exists for
+        // the sake of matching the library build type
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.adhoc
+            debuggable false
         }
     }
     compileOptions {

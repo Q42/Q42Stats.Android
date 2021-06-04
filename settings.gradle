@@ -1,3 +1,4 @@
 include ':library'
-include ':app'
+if (!System.env.JITPACK) //the app is just a sample. Keep Jitpack builds small by excluding it
+    include ':app'
 rootProject.name = "Q42 Stats"

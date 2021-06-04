@@ -17,14 +17,20 @@ android {
 
         buildConfigField("String", "LIB_BUILD_DATE", '"' + new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + '"')
 
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
+        preRelease {
+            minifyEnabled true
+            debuggable false
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            debuggable false
         }
     }
     compileOptions {
@@ -39,10 +45,10 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
     testImplementation 'junit:junit:4.13.2'
+    //json is included in Android, but not in Kotlin. This import makes it available for unit tests
+    testImplementation 'org.json:json:20201115'
+
 
 }
