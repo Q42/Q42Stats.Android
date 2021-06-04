@@ -7,6 +7,6 @@ import com.q42.q42stats.library.Q42Stats
 class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Q42Stats().run(this.applicationContext)
+        Q42Stats().runAsync(this.applicationContext)
     }
 }

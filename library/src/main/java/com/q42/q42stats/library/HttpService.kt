@@ -1,9 +1,5 @@
 package com.q42.q42stats.library
 
-import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -14,21 +10,19 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 object HttpService {
-    fun sendStats(data: JSONObject) {
+    /** Synchronously send the stats. Make sure to run this on a worker thread */
+    fun sendStatsSync(data: JSONObject) {
         httpPost("https://example.com/stats/android", data)
     }
 
     @Throws(IOException::class, JSONException::class)
     private fun httpPost(url: String, jsonObject: JSONObject) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val conn = URL(url).openConnection() as HttpsURLConnection
-            conn.requestMethod = "POST"
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
-            setPostRequestContent(conn, jsonObject)
-            conn.connect()
-
-            Log.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
-        }
+        val conn = URL(url).openConnection() as HttpsURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+        setPostRequestContent(conn, jsonObject)
+        conn.connect()
+        Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
     }
 
     @Throws(IOException::class)
@@ -37,7 +31,7 @@ object HttpService {
         val os = conn.outputStream
         val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
         writer.write(jsonObject.toString())
-        Log.d(TAG, "Sending JSON: $jsonObject")
+        Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
         writer.flush()
         writer.close()
         os.close()

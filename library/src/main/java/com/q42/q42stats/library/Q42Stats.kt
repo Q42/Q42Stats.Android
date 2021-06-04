@@ -1,38 +1,62 @@
 package com.q42.q42stats.library
 
 import android.content.Context
-import android.util.Log
-import com.q42.q42stats.library.BuildConfig
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.SystemCollector
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.Serializable
+import java.util.concurrent.atomic.AtomicBoolean
 
 const val TAG = "Q42Stats"
 const val SUBMIT_INTERVAL_MILLIS = 60 * 60 * 24 * 1000L
 
-class Q42Stats {
-    val name = "Q42 Stats lib"
+private val MUTEX = Unit
 
-    /* Collects stats and sends it to the server */
-    fun run(context: Context) {
+class Q42Stats {
+    val name = "Q42 Stats lib" //todo remove
+    private val isRunning = AtomicBoolean(false)
+
+    /* Collects stats and sends it to the server. This method is safe to be called from anywhere
+    in your app and will do nothing if it has already run before */
+    fun runAsync(context: Context) {
+        Q42StatsLogger.d(TAG, "Q42Stats: Checking Preconditions")
+        if (isRunning.get()) {
+            Q42StatsLogger.i(
+                TAG,
+                "Q42Stats is already running. Exit."
+            )
+            return
+        }
+        GlobalScope.launch(Dispatchers.IO) { synchronized(MUTEX) { runSync(context) } }
+    }
+
+    /** This should be run on a worker thread */
+    private fun runSync(context: Context) {
         try {
+            isRunning.set(true)
             val prefs = Q42StatsPrefs(context)
             if (prefs.withinSubmitInterval(SUBMIT_INTERVAL_MILLIS) && !BuildConfig.DEBUG) {
-                Log.d(
+                Q42StatsLogger.i(
                     TAG,
-                    "Q42Stats were already sent in the last ${SUBMIT_INTERVAL_MILLIS / 1000} seconds. Exit. "
+                    "Q42Stats were already sent in the last ${SUBMIT_INTERVAL_MILLIS / 1000} seconds."
                 )
                 return
             }
+            Q42StatsLogger.i(TAG, "Q42Stats: Start")
             val collected = collect(context, prefs).toFireStoreFormat()
-            HttpService.sendStats(collected)
+            HttpService.sendStatsSync(collected)
             prefs.updateSubmitTimestamp()
 
         } catch (e: Throwable) {
-            Log.e(TAG, "Q42Stats encountered an error", e)
+            Q42StatsLogger.e(TAG, "Q42Stats encountered an error", e)
             if (BuildConfig.DEBUG) {
                 throw e
             }
+        } finally {
+            Q42StatsLogger.i(TAG, "Q42Stats: Exit")
+            isRunning.set(false)
         }
     }
 
