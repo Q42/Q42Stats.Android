@@ -24,10 +24,6 @@ android {
     }
 
     buildTypes {
-        preRelease {
-            minifyEnabled true
-            debuggable false
-        }
         release {
             minifyEnabled true
             debuggable false

@@ -1,6 +1,7 @@
 # Q42Stats.Android 
-[![Release](https://jitpack.io/v/Q42/Q42Stats.Android.svg)]
-(https://jitpack.io/#Q42/Q42Stats.Android)
+[![Release](https://jitpack.io/v/Q42/Q42Stats.Android.svg)](https://jitpack.io/#Q42/Q42Stats.Android)
+[![](https://jitci.com/gh/Q42/Q42Stats.Android/svg)](https://jitci.com/gh/Q42/Q42Stats.Android)
+
 
 Collect stats for Q42 internal usage, shared accross multiple Android projects.
 
