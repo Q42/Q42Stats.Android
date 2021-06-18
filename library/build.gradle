@@ -3,7 +3,10 @@ import java.text.SimpleDateFormat
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven'
 }
+
+group = 'com.github.Q42'
 
 android {
     compileSdkVersion 30
@@ -38,6 +41,21 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//
+//    task javadocJar(type: Jar, dependsOn: javadoc) {
+//        classifier = 'javadoc'
+//        from javadoc.destinationDir
+//    }
+//
+//    artifacts {
+//        archives sourcesJar
+//        archives javadocJar
+//    }
 }
 
 dependencies {
