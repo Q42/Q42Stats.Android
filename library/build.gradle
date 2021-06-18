@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "0.0.1"
+        versionName "0.0.3"
 
         buildConfigField("String", "LIB_BUILD_DATE", '"' + new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + '"')
 
@@ -26,6 +26,8 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
             debuggable false
         }
     }

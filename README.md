@@ -8,12 +8,14 @@ Collect stats for Q42 internal usage, shared accross multiple Android projects.
 An iOS version is also available: https://github.com/Q42/Q42Stats
 
 ## Installation
-Att the Jitpack repo and include the library:
+Add the Jitpack repo and include the library:
 
 ```gradle
-   repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
+   allprojects {
+       repositories {
+           [..]
+           maven { url "https://jitpack.io" }
+       }
    }
    dependencies {
        implementation 'com.github.Q42:Q42Stats.Android:X.X.X' // Replace X.X.X by the latest version,
