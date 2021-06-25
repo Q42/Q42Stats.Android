@@ -39,6 +39,8 @@ It is safe to call this function multiple times, as it will exit immediately if 
 
 ## Data collected
 
+Not all fields are supported on all versions of Android. If unsupported, the corresponding value may be false, "unknown" or the key may be completely omitted.
+
 ### Accessibliity
 
 | Key | Value | Notes |
@@ -49,6 +51,7 @@ It is safe to call this function multiple times, as it will exit immediately if 
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling |
 
 ### Preferences
 

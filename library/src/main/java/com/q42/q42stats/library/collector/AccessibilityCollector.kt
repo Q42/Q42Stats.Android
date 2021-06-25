@@ -7,6 +7,7 @@ import android.content.Context.CAPTIONING_SERVICE
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Build
+import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
 import java.io.Serializable
@@ -31,6 +32,12 @@ object AccessibilityCollector {
         put("isTalkBackEnabled", services.any { it.contains("talkback") })
         put("isVoiceAccessEnabled", services.any { it.contains("voiceaccess") })
         put("fontScale", configuration.fontScale)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            put(
+                "displayScale",
+                context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEVICE_STABLE.toDouble()
+            )
+        }
 
         put(
             "isClosedCaptioningEnabled",
