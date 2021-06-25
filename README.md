@@ -44,8 +44,10 @@ It is safe to call this function multiple times, as it will exit immediately if 
 | Key | Value | Notes |
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
+| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio |
 | `isTouchExplorationEnabled` | bool |
 | `fontScale` | float | 1.0 is regular scaling |
+
 
 
 ### Screen
