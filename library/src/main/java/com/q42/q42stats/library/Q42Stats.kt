@@ -2,6 +2,7 @@ package com.q42.q42stats.library
 
 import android.content.Context
 import com.q42.q42stats.library.collector.AccessibilityCollector
+import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -68,6 +69,7 @@ class Q42Stats {
         collected["Stats timestamp"] = System.currentTimeMillis() / 1000L
 
         collected += AccessibilityCollector.collect(context)
+        collected += PreferencesCollector.collect(context)
         collected += SystemCollector.collect()
         return collected
     }

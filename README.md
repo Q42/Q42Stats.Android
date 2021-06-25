@@ -45,12 +45,17 @@ It is safe to call this function multiple times, as it will exit immediately if 
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio |
-| `isTouchExplorationEnabled` | bool |
-| `isTalkBackEnabled` | bool
-| `isVoiceAccessEnabled` | bool
+| `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled wher the user navigates the interface by touch. Most probably TalkbBack, or similar 
+| `isTalkBackEnabled` | bool | iOS: VoiceOver
+| `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
 
+### Preferences
 
+| Key | Value | Notes |
+|-|-|-|
+| `daytime`| day, twilight, night, unknown | Coarse estimation of time of day. unknown if user is not in Amsterdam TimeZone
+| `isNightModeEnabled` | bool | iOS: Dark Mode
 
 ### Screen
 

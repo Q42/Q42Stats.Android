@@ -18,7 +18,7 @@ object AccessibilityCollector {
     fun collect(context: Context) = mutableMapOf<String, Serializable>().apply {
         val accessibilityManager =
             context.getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
-        val res = context.resources
+        val configuration = context.resources.configuration
 
         val services = accessibilityManager.getEnabledAccessibilityServiceList(
             AccessibilityServiceInfo.FEEDBACK_ALL_MASK
@@ -30,7 +30,7 @@ object AccessibilityCollector {
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
         put("isTalkBackEnabled", services.any { it.contains("talkback") })
         put("isVoiceAccessEnabled", services.any { it.contains("voiceaccess") })
-        put("fontScale", res.configuration.fontScale)
+        put("fontScale", configuration.fontScale)
 
         put(
             "isClosedCaptioningEnabled",
@@ -45,7 +45,7 @@ object AccessibilityCollector {
 
         put(
             "screenOrientation",
-            res.configuration.orientation.let { intValue ->
+            configuration.orientation.let { intValue ->
                 when (intValue) {
                     ORIENTATION_LANDSCAPE -> "landscape"
                     ORIENTATION_PORTRAIT -> "portrait"
