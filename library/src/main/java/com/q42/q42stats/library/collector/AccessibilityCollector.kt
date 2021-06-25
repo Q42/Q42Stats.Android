@@ -10,6 +10,7 @@ import android.os.Build
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
 import java.io.Serializable
+import java.util.*
 
 /** Collects Accessibility-related settings and preferences, such as font scaling */
 object AccessibilityCollector {
@@ -21,12 +22,14 @@ object AccessibilityCollector {
 
         val services = accessibilityManager.getEnabledAccessibilityServiceList(
             AccessibilityServiceInfo.FEEDBACK_ALL_MASK
-        ).map {
-            it.packageNames
+        ).mapNotNull {
+            it.resolveInfo?.serviceInfo?.name?.toLowerCase(Locale.ROOT)
         }
 
         put("isAccessibilityManagerEnabled", accessibilityManager.isEnabled)
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
+        put("isTalkBackEnabled", services.any { it.contains("talkback") })
+        put("isVoiceAccessEnabled", services.any { it.contains("voiceaccess") })
         put("fontScale", res.configuration.fontScale)
 
         put(
