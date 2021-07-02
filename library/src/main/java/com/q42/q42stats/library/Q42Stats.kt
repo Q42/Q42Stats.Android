@@ -11,12 +11,10 @@ import java.io.Serializable
 import java.util.concurrent.atomic.AtomicBoolean
 
 const val TAG = "Q42Stats"
-const val SUBMIT_INTERVAL_MILLIS = 60 * 60 * 24 * 1000L
 
 private val MUTEX = Unit
 
-class Q42Stats {
-    val name = "Q42 Stats lib" //todo remove
+class Q42Stats(private val config: Q42StatsConfig) {
     private val isRunning = AtomicBoolean(false)
 
     /* Collects stats and sends it to the server. This method is safe to be called from anywhere
@@ -38,16 +36,16 @@ class Q42Stats {
         try {
             isRunning.set(true)
             val prefs = Q42StatsPrefs(context)
-            if (prefs.withinSubmitInterval(SUBMIT_INTERVAL_MILLIS) && !BuildConfig.DEBUG) {
+            if (prefs.withinSubmitInterval(config.minimumSubmitInterval * 1000L) && !BuildConfig.DEBUG) {
                 Q42StatsLogger.i(
                     TAG,
-                    "Q42Stats were already sent in the last ${SUBMIT_INTERVAL_MILLIS / 1000} seconds."
+                    "Q42Stats were already sent in the last ${config.minimumSubmitInterval} seconds."
                 )
                 return
             }
             Q42StatsLogger.i(TAG, "Q42Stats: Start")
             val collected = collect(context, prefs).toFireStoreFormat()
-            HttpService.sendStatsSync(collected)
+            HttpService.sendStatsSync(config, collected)
             prefs.updateSubmitTimestamp()
 
         } catch (e: Throwable) {

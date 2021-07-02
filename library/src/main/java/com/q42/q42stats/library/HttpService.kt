@@ -11,8 +11,17 @@ import javax.net.ssl.HttpsURLConnection
 
 object HttpService {
     /** Synchronously send the stats. Make sure to run this on a worker thread */
-    fun sendStatsSync(data: JSONObject) {
-        httpPost("https://example.com/stats/android", data)
+    fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
+        sendStatsSync(
+            "https://firestore.googleapis.com/v1/projects/${config.fireBaseProject}/" +
+                    "databases/(default)/documents/${config.firebaseCollection}?mask.fieldPaths=_",
+            data
+        )
+    }
+
+    /** Synchronously send the stats. Make sure to run this on a worker thread */
+    private fun sendStatsSync(url: String, data: JSONObject) {
+        httpPost(url, data)
     }
 
     @Throws(IOException::class, JSONException::class)
