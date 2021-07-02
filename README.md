@@ -18,7 +18,7 @@ Add the Jitpack repo and include the library:
        }
    }
    dependencies {
-       implementation 'com.github.Q42:Q42Stats.Android:X.X.X' // Replace X.X.X by the latest version,
+       implementation 'com.github.q42:q42stats.android:X.X.X' // Replace X.X.X by the latest version,
        // which is available in the Jitpack badge at the top of this page
    }
 ```  
