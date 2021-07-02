@@ -4,7 +4,7 @@ import android.app.Application
 import com.q42.q42stats.library.Q42Stats
 import com.q42.q42stats.library.Q42StatsConfig
 
-@Suppress("unused") // referenced from manifest only
+@Suppress("unused") // SampleApplication is referenced from manifest only
 class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()

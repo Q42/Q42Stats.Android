@@ -25,16 +25,24 @@ Add the Jitpack repo and include the library:
 
 ## Usage
 
-Call `Q42Stats.runAsync(Context)` from anywhere in your app. This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
-
-```
+Call `Q42Stats().runAsync(Context)` from anywhere in your app. 
+```kotlin
 class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Q42Stats().runAsync(this.applicationContext)
+        Q42Stats(
+            Q42StatsConfig(
+                fireBaseProject = "theProject",
+                firebaseCollection = "theCollection",
+                // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
+                minimumSubmitInterval = (60 * 60 * 24 * 7.5).toLong()
+            )
+        ).runAsync(this.applicationContext)
     }
 }
 ```
+This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
+
 It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
 
 ## Data collected
@@ -47,7 +55,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio |
-| `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled wher the user navigates the interface by touch. Most probably TalkbBack, or similar 
+| `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar 
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
@@ -71,5 +79,21 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | Key | Value | Notes |
 |-|-|-|
 | `defaultLanguage`| en, nl, ... |
+
+
+## Development
+
+### Setup
+This project contains a demo app which can simply be run without further setup. By default it tries to send data to a non-existing Firestore database, so change the SampleApplication to construct a Q42Stats object for a real database if you want to test server interaction.
+
+### Publishing
+
+This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.android). This makes publishing a new version very easy:
+
+1. Push the code for the new version to the `main` branch
+2. Create a tag in the semver format: `x.x.x`
+3. On GitHub, create a release from that tag.
+4. Unit tests will be run automatically. Check [JitCI](https://jitci.com/gh/Q42/Q42Stats.Android) for status
+4. If everything went well the release will be visible on [JitPack](https://jitpack.io/#q42/q42stats.android) and the version number in the badge at the top of this page will update.
 
 
