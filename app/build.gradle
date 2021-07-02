@@ -76,5 +76,5 @@ dependencies {
 
 
     localImplementation project(path: ':library')
-    jitpackImplementation 'com.github.Q42:Q42Stats.Android:0.0.5'
+    jitpackImplementation 'com.github.Q42:Q42Stats.Android:0.1.0'
 }
