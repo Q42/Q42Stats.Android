@@ -18,7 +18,7 @@ object DayTimeUtil {
         if (tz.id != "Europe/Amsterdam") {
             return DayTime.Unknown
         }
-        val cal = Calendar.getInstance().apply {
+        val cal = Calendar.getInstance(tz).apply {
             time = date
         }
         val month = cal.get(Calendar.MONTH)
