@@ -30,6 +30,8 @@ Call `Q42Stats().runAsync(Context)` from anywhere in your app.
 class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        //Optionally set the log level, which is Error by default
+        //Q42Stats.logLevel = Q42StatsLogLevel.Debug
         Q42Stats(
             Q42StatsConfig(
                 fireBaseProject = "theProject",

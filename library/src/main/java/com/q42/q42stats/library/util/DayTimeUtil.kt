@@ -4,7 +4,7 @@ import org.jetbrains.annotations.TestOnly
 import java.util.*
 import kotlin.math.abs
 
-object DayTimeUtil {
+internal object DayTimeUtil {
 
     // Real hacky function for determining day/night/twilight
     // With very wide margin (3 hours), because we don't know how

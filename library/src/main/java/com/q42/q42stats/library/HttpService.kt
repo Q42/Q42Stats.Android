@@ -9,7 +9,7 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 @WorkerThread
-object HttpService {
+internal object HttpService {
 
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
         sendStatsSync(

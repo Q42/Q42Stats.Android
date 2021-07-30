@@ -74,4 +74,13 @@ class Q42Stats(private val config: Q42StatsConfig) {
         collected += SystemCollector.collect()
         return collected
     }
+
+    companion object {
+        @Suppress("unused")
+        var logLevel: Q42StatsLogLevel
+            get() = Q42StatsLogger.logLevel
+            set(value) {
+                Q42StatsLogger.logLevel = value
+            }
+    }
 }

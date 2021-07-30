@@ -14,7 +14,7 @@ import java.io.Serializable
 import java.util.*
 
 /** Collects Accessibility-related settings and preferences, such as font scaling */
-object AccessibilityCollector {
+internal object AccessibilityCollector {
 
     fun collect(context: Context) = mutableMapOf<String, Serializable>().apply {
         val accessibilityManager =

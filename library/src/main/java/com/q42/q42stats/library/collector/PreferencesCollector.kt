@@ -6,7 +6,7 @@ import com.q42.q42stats.library.util.DayTimeUtil
 import java.io.Serializable
 
 /** Collects System settings such as default locale */
-object PreferencesCollector {
+internal object PreferencesCollector {
 
     fun collect(context: Context) = mutableMapOf<String, Serializable>().apply {
         val configuration = context.resources.configuration

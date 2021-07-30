@@ -15,7 +15,7 @@ import java.io.Serializable
  *     }
  * ```
  */
-fun Map<String, Serializable>.toFireStoreFormat(): JSONObject {
+internal fun Map<String, Serializable>.toFireStoreFormat(): JSONObject {
     val fireStoreMap = mapOf(
         "fields" to this.mapValues {
             mapOf("stringValue" to it.value.toString())
