@@ -6,38 +6,32 @@ import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.Serializable
-import java.util.concurrent.atomic.AtomicBoolean
 
 const val TAG = "Q42Stats"
 
-private val MUTEX = Unit
-
 class Q42Stats(private val config: Q42StatsConfig) {
-    private val isRunning = AtomicBoolean(false)
 
     /* Collects stats and sends it to the server. This method is safe to be called from anywhere
-    in your app and will do nothing if it has already run before */
+    in your app and will do nothing if it is running or has already run before */
     @AnyThread
-    fun runAsync(context: Context) {
+    fun runAsync(context: Context, coroutineScope: CoroutineScope = MainScope()) {
         Q42StatsLogger.d(TAG, "Q42Stats: Checking Preconditions")
-        if (isRunning.get()) {
-            Q42StatsLogger.i(
-                TAG,
-                "Q42Stats is already running. Exit."
-            )
-            return
+        // check preconditions on the main thread to prevent concurrency issues
+        coroutineScope.launch(Dispatchers.Main) {
+            if (job?.isActive != true) { // job is null or not active
+                // Do the actual work on a worker thread
+                job = coroutineScope.launch(Dispatchers.IO) { runSync(context) }
+            } else {
+                Q42StatsLogger.i(TAG, "Q42Stats is already running. Exit.")
+            }
         }
-        GlobalScope.launch(Dispatchers.IO) { synchronized(MUTEX) { runSync(context) } }
     }
 
     @WorkerThread
     private fun runSync(context: Context) {
         try {
-            isRunning.set(true)
             val prefs = Q42StatsPrefs(context)
             if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)
                 && !BuildConfig.DEBUG
@@ -52,7 +46,6 @@ class Q42Stats(private val config: Q42StatsConfig) {
             val collected = collect(context, prefs).toFireStoreFormat()
             HttpService.sendStatsSync(config, collected)
             prefs.updateSubmitTimestamp()
-
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Q42Stats encountered an error", e)
             if (BuildConfig.DEBUG) {
@@ -60,7 +53,6 @@ class Q42Stats(private val config: Q42StatsConfig) {
             }
         } finally {
             Q42StatsLogger.i(TAG, "Q42Stats: Exit")
-            isRunning.set(false)
         }
     }
 
@@ -84,5 +76,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
             set(value) {
                 Q42StatsLogger.logLevel = value
             }
+
+        private var job: Job? = null
     }
 }
