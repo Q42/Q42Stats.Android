@@ -1,5 +1,6 @@
 package com.q42.q42stats.library
 
+import androidx.annotation.WorkerThread
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -9,8 +10,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
+@WorkerThread
 object HttpService {
-    /** Synchronously send the stats. Make sure to run this on a worker thread */
+
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
         sendStatsSync(
             "https://firestore.googleapis.com/v1/projects/${config.fireBaseProject}/" +

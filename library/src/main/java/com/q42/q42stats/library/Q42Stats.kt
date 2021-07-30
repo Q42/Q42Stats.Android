@@ -1,6 +1,8 @@
 package com.q42.q42stats.library
 
 import android.content.Context
+import androidx.annotation.AnyThread
+import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
@@ -19,6 +21,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
     /* Collects stats and sends it to the server. This method is safe to be called from anywhere
     in your app and will do nothing if it has already run before */
+    @AnyThread
     fun runAsync(context: Context) {
         Q42StatsLogger.d(TAG, "Q42Stats: Checking Preconditions")
         if (isRunning.get()) {
@@ -31,7 +34,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
         GlobalScope.launch(Dispatchers.IO) { synchronized(MUTEX) { runSync(context) } }
     }
 
-    /** This should be run on a worker thread */
+    @WorkerThread
     private fun runSync(context: Context) {
         try {
             isRunning.set(true)

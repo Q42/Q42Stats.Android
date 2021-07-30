@@ -3,7 +3,7 @@
 [![](https://jitci.com/gh/Q42/Q42Stats.Android/svg)](https://jitci.com/gh/Q42/Q42Stats.Android)
 
 
-Collect stats for Q42 internal usage, shared accross multiple Android projects.
+Collect stats for Q42 internal usage, shared across multiple Android projects.
 
 An iOS version is also available: https://github.com/Q42/Q42Stats
 
