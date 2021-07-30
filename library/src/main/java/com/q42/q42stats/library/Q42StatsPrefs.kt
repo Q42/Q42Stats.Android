@@ -21,20 +21,16 @@ class Q42StatsPrefs(context: Context) {
         System.currentTimeMillis() <
                 prefs.getLong(LAST_SUBMIT_TIMESTAMP_KEY, 0) + interval
 
-    fun updateSubmitTimestamp() {
-        prefs.edit().apply {
-            putLong(LAST_SUBMIT_TIMESTAMP_KEY, System.currentTimeMillis())
-            apply()
-        }
+    fun updateSubmitTimestamp() = with(prefs.edit()) {
+        putLong(LAST_SUBMIT_TIMESTAMP_KEY, System.currentTimeMillis())
+        apply()
     }
 
-    private fun createInstallationId(): String {
-        prefs.edit().apply {
-            val uuid = UUID.randomUUID().toString()
-            putString(INSTALLATION_ID_KEY, uuid)
-            apply()
-            return uuid
-        }
+    private fun createInstallationId(): String = with(prefs.edit()) {
+        val uuid = UUID.randomUUID().toString()
+        putString(INSTALLATION_ID_KEY, uuid)
+        apply()
+        return uuid
     }
 
 }
