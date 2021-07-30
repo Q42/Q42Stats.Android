@@ -32,7 +32,7 @@ object Q42StatsLogger {
 
     fun e(tag: String, message: String, e: Throwable? = null) {
         if (logLevel <= LogLevel.Error) {
-            Log.e(tag, message, e)
+            Log.e(tag, "$message: ${e?.message}", e)
         }
     }
 }

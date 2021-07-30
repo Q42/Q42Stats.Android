@@ -1,10 +1,8 @@
 package com.q42.q42stats.library
 
 import androidx.annotation.WorkerThread
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedWriter
-import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
@@ -21,30 +19,35 @@ object HttpService {
         )
     }
 
-    /** Synchronously send the stats. Make sure to run this on a worker thread */
     private fun sendStatsSync(url: String, data: JSONObject) {
         httpPost(url, data)
     }
 
-    @Throws(IOException::class, JSONException::class)
     private fun httpPost(url: String, jsonObject: JSONObject) {
-        val conn = URL(url).openConnection() as HttpsURLConnection
-        conn.requestMethod = "POST"
-        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
-        setPostRequestContent(conn, jsonObject)
-        conn.connect()
-        Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
+        try {
+            val conn = URL(url).openConnection() as HttpsURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+            sendPostRequestContent(conn, jsonObject)
+        } catch (e: Throwable) {
+            throw Q42StatsException("Could not send stats to server", e)
+        }
     }
 
-    @Throws(IOException::class)
-    private fun setPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject) {
-
-        val os = conn.outputStream
-        val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
-        writer.write(jsonObject.toString())
-        Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
-        writer.flush()
-        writer.close()
-        os.close()
+    private fun sendPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject) {
+        try {
+            conn.outputStream.use { os ->
+                BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
+                    writer.write(jsonObject.toString())
+                    Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
+                    writer.flush()
+                }
+            }
+            Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
+        } catch (e: Throwable) {
+            throw Q42StatsException("Could not add data to POST request", e)
+        } finally {
+            conn.disconnect()
+        }
     }
 }
