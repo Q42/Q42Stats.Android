@@ -5,5 +5,5 @@ data class Q42StatsConfig(
     val firebaseCollection: String,
     /** Data collection is skipped when less than this many seconds have passed
      * since the previous run */
-    val minimumSubmitInterval: Long
+    val minimumSubmitIntervalSeconds: Long
 )

@@ -39,10 +39,12 @@ class Q42Stats(private val config: Q42StatsConfig) {
         try {
             isRunning.set(true)
             val prefs = Q42StatsPrefs(context)
-            if (prefs.withinSubmitInterval(config.minimumSubmitInterval * 1000L) && !BuildConfig.DEBUG) {
+            if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)
+                && !BuildConfig.DEBUG
+            ) {
                 Q42StatsLogger.i(
                     TAG,
-                    "Q42Stats were already sent in the last ${config.minimumSubmitInterval} seconds."
+                    "Q42Stats were already sent in the last ${config.minimumSubmitIntervalSeconds} seconds."
                 )
                 return
             }
