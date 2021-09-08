@@ -32,8 +32,8 @@ class SampleApplication : Application() {
         super.onCreate()
         Q42Stats(
             Q42StatsConfig(
-                fireBaseProject = "theProject",
-                firebaseCollection = "theCollection",
+                firebaseProjectId = "theProject",
+                firestoreCollectionId = "theCollection",
                 // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                 minimumSubmitInterval = (60 * 60 * 24 * 7.5).toLong()
             )

@@ -1,8 +1,8 @@
 package com.q42.q42stats.library
 
 data class Q42StatsConfig(
-    val fireBaseProject: String,
-    val firebaseCollection: String,
+    val firebaseProjectId: String,
+    val firebaseCollectionId: String,
     /** Data collection is skipped when less than this many seconds have passed
      * since the previous run */
     val minimumSubmitIntervalSeconds: Long

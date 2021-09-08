@@ -13,8 +13,8 @@ internal object HttpService {
 
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
         sendStatsSync(
-            "https://firestore.googleapis.com/v1/projects/${config.fireBaseProject}/" +
-                    "databases/(default)/documents/${config.firebaseCollection}?mask.fieldPaths=_",
+            "https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/" +
+                    "databases/(default)/documents/${config.firebaseCollectionId}?mask.fieldPaths=_",
             data
         )
     }
