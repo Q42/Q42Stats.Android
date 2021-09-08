@@ -30,8 +30,6 @@ Call `Q42Stats().runAsync(Context)` from anywhere in your app.
 class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        //Optionally set the log level, which is Error by default
-        //Q42Stats.logLevel = Q42StatsLogLevel.Debug
         Q42Stats(
             Q42StatsConfig(
                 fireBaseProject = "theProject",
@@ -46,6 +44,12 @@ class SampleApplication : Application() {
 This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
 
 It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
+
+By default, Q42Stats only logs errors. For debugging purposes, set the log level before using Q42Stats:
+
+```
+Q42Stats.logLevel = Q42StatsLogLevel.Debug
+```
 
 ## Data collected
 
