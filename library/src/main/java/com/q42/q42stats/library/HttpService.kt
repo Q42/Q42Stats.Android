@@ -24,13 +24,15 @@ internal object HttpService {
     }
 
     private fun httpPost(url: String, jsonObject: JSONObject) {
+        val conn = URL(url).openConnection() as HttpsURLConnection
         try {
-            val conn = URL(url).openConnection() as HttpsURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not send stats to server", e)
+        } finally {
+            conn.disconnect()
         }
     }
 
@@ -46,8 +48,6 @@ internal object HttpService {
             Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
-        } finally {
-            conn.disconnect()
         }
     }
 }
