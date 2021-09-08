@@ -33,9 +33,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
     private fun runSync(context: Context) {
         try {
             val prefs = Q42StatsPrefs(context)
-            if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)
-                && !BuildConfig.DEBUG
-            ) {
+            if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)) {
                 Q42StatsLogger.i(
                     TAG,
                     "Q42Stats were already sent in the last ${config.minimumSubmitIntervalSeconds} seconds."
@@ -77,6 +75,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 Q42StatsLogger.logLevel = value
             }
 
+        /** A static job ensures that only a single instance of Q42Stats can be running */
         private var job: Job? = null
     }
 }
