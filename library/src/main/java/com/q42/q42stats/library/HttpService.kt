@@ -30,7 +30,7 @@ internal object HttpService {
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
-            throw Q42StatsException("Could not send stats to server", e)
+            Q42StatsLogger.e(TAG, "Could not send stats to server", e)
         }
     }
 
@@ -45,7 +45,7 @@ internal object HttpService {
             }
             Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
         } catch (e: Throwable) {
-            throw Q42StatsException("Could not add data to POST request", e)
+            Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
         } finally {
             conn.disconnect()
         }
