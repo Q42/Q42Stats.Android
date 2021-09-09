@@ -8,7 +8,7 @@ private const val SHARED_PREFS_NAME = "Q42StatsPrefs"
 private const val LAST_SUBMIT_TIMESTAMP_KEY = "lastSubmitTimestamp"
 private const val INSTALLATION_ID_KEY = "installationId"
 
-class Q42StatsPrefs(context: Context) {
+internal class Q42StatsPrefs(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -21,20 +21,16 @@ class Q42StatsPrefs(context: Context) {
         System.currentTimeMillis() <
                 prefs.getLong(LAST_SUBMIT_TIMESTAMP_KEY, 0) + interval
 
-    fun updateSubmitTimestamp() {
-        prefs.edit().apply() {
-            putLong(LAST_SUBMIT_TIMESTAMP_KEY, System.currentTimeMillis())
-            apply()
-        }
+    fun updateSubmitTimestamp() = with(prefs.edit()) {
+        putLong(LAST_SUBMIT_TIMESTAMP_KEY, System.currentTimeMillis())
+        apply()
     }
 
-    private fun createInstallationId(): String {
-        prefs.edit().apply() {
-            val uuid = UUID.randomUUID().toString()
-            putString(INSTALLATION_ID_KEY, uuid)
-            apply()
-            return uuid
-        }
+    private fun createInstallationId(): String = with(prefs.edit()) {
+        val uuid = UUID.randomUUID().toString()
+        putString(INSTALLATION_ID_KEY, uuid)
+        apply()
+        return uuid
     }
 
 }

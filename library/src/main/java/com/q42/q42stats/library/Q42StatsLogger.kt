@@ -2,42 +2,42 @@ package com.q42.q42stats.library
 
 import android.util.Log
 
-object Q42StatsLogger {
+internal object Q42StatsLogger {
     /** logs with lower importance will be ignored */
-    private val logLevel = if (BuildConfig.DEBUG) LogLevel.Verbose else LogLevel.Info
+    var logLevel = if (BuildConfig.DEBUG) Q42StatsLogLevel.Verbose else Q42StatsLogLevel.Error
 
     fun v(tag: String, message: String) {
-        if (logLevel <= LogLevel.Verbose) {
+        if (logLevel <= Q42StatsLogLevel.Verbose) {
             Log.v(tag, message)
         }
     }
 
     fun d(tag: String, message: String) {
-        if (logLevel <= LogLevel.Debug) {
+        if (logLevel <= Q42StatsLogLevel.Debug) {
             Log.d(tag, message)
         }
     }
 
     fun i(tag: String, message: String) {
-        if (logLevel <= LogLevel.Info) {
+        if (logLevel <= Q42StatsLogLevel.Info) {
             Log.i(tag, message)
         }
     }
 
     fun w(tag: String, message: String) {
-        if (logLevel <= LogLevel.Warn) {
+        if (logLevel <= Q42StatsLogLevel.Warn) {
             Log.w(tag, message)
         }
     }
 
     fun e(tag: String, message: String, e: Throwable? = null) {
-        if (logLevel <= LogLevel.Error) {
-            Log.e(tag, message, e)
+        if (logLevel <= Q42StatsLogLevel.Error) {
+            Log.e(tag, "$message: ${e?.message}", e)
         }
     }
 }
 
-enum class LogLevel {
+enum class Q42StatsLogLevel {
     //Log levels in order of importance
     Verbose,
     Debug,

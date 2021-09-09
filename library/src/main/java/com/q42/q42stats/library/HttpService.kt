@@ -1,48 +1,53 @@
 package com.q42.q42stats.library
 
-import org.json.JSONException
+import androidx.annotation.WorkerThread
 import org.json.JSONObject
 import java.io.BufferedWriter
-import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-object HttpService {
-    /** Synchronously send the stats. Make sure to run this on a worker thread */
+@WorkerThread
+internal object HttpService {
+
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
         sendStatsSync(
-            "https://firestore.googleapis.com/v1/projects/${config.fireBaseProject}/" +
-                    "databases/(default)/documents/${config.firebaseCollection}?mask.fieldPaths=_",
+            "https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/" +
+                    "databases/(default)/documents/${config.firebaseCollectionId}?mask.fieldPaths=_",
             data
         )
     }
 
-    /** Synchronously send the stats. Make sure to run this on a worker thread */
     private fun sendStatsSync(url: String, data: JSONObject) {
         httpPost(url, data)
     }
 
-    @Throws(IOException::class, JSONException::class)
     private fun httpPost(url: String, jsonObject: JSONObject) {
         val conn = URL(url).openConnection() as HttpsURLConnection
-        conn.requestMethod = "POST"
-        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
-        setPostRequestContent(conn, jsonObject)
-        conn.connect()
-        Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
+        try {
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+            sendPostRequestContent(conn, jsonObject)
+        } catch (e: Throwable) {
+            Q42StatsLogger.e(TAG, "Could not send stats to server", e)
+        } finally {
+            conn.disconnect()
+        }
     }
 
-    @Throws(IOException::class)
-    private fun setPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject) {
-
-        val os = conn.outputStream
-        val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
-        writer.write(jsonObject.toString())
-        Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
-        writer.flush()
-        writer.close()
-        os.close()
+    private fun sendPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject) {
+        try {
+            conn.outputStream.use { os ->
+                BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
+                    writer.write(jsonObject.toString())
+                    Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
+                    writer.flush()
+                }
+            }
+            Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
+        } catch (e: Throwable) {
+            Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
+        }
     }
 }

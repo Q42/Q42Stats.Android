@@ -4,9 +4,9 @@ import org.jetbrains.annotations.TestOnly
 import java.util.*
 import kotlin.math.abs
 
-object DayTimeUtil {
+internal object DayTimeUtil {
 
-    // Real hacky function for determening day/night/twilight
+    // Real hacky function for determining day/night/twilight
     // With very wide margin (3 hours), because we don't know how
     // Android implements this for Dark mode switch
     // Source: https://github.com/Q42/Q42Stats/blob/master/Sources/Q42Stats/Q42Stats.swift

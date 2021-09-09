@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.util.*
 
 /** Collects System settings such as default locale */
-object SystemCollector {
+internal object SystemCollector {
 
     fun collect() = mutableMapOf<String, Serializable>().apply {
         put("defaultLanguage", Locale.getDefault().language) // language code like en or nl

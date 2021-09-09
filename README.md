@@ -3,7 +3,7 @@
 [![](https://jitci.com/gh/Q42/Q42Stats.Android/svg)](https://jitci.com/gh/Q42/Q42Stats.Android)
 
 
-Collect stats for Q42 internal usage, shared accross multiple Android projects.
+Collect stats for Q42 internal usage, shared across multiple Android projects.
 
 An iOS version is also available: https://github.com/Q42/Q42Stats
 
@@ -32,8 +32,8 @@ class SampleApplication : Application() {
         super.onCreate()
         Q42Stats(
             Q42StatsConfig(
-                fireBaseProject = "theProject",
-                firebaseCollection = "theCollection",
+                firebaseProjectId = "theProject",
+                firestoreCollectionId = "theCollection",
                 // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                 minimumSubmitInterval = (60 * 60 * 24 * 7.5).toLong()
             )
@@ -44,6 +44,12 @@ class SampleApplication : Application() {
 This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
 
 It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
+
+By default, Q42Stats only logs errors. For debugging purposes, set the log level before using Q42Stats:
+
+```
+Q42Stats.logLevel = Q42StatsLogLevel.Debug
+```
 
 ## Data collected
 
