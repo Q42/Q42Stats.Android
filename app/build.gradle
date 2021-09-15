@@ -75,6 +75,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 
 
-    localImplementation project(path: ':library')
+    localImplementation project(path: ':q42stats')
     jitpackImplementation 'com.github.q42:q42stats.android:0.1.0'
 }
