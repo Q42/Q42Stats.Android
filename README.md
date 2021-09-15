@@ -35,7 +35,7 @@ class SampleApplication : Application() {
                 firebaseProjectId = "theProject",
                 firestoreCollectionId = "theCollection",
                 // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
-                minimumSubmitInterval = (60 * 60 * 24 * 7.5).toLong()
+                minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
             )
         ).runAsync(this.applicationContext)
     }
