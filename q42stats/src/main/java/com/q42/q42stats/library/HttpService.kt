@@ -26,9 +26,12 @@ internal object HttpService {
     private fun httpPost(url: String, jsonObject: JSONObject) {
         val conn = URL(url).openConnection() as HttpsURLConnection
         try {
+            conn.setRequestProperty("connection", "close")
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
             sendPostRequestContent(conn, jsonObject)
+            // Don't read any response from the server, the HttUrlConnection code would trigger
+            // a StrictMode violation related to a Zip inflator that is unclosed
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not send stats to server", e)
         } finally {
@@ -45,7 +48,6 @@ internal object HttpService {
                     writer.flush()
                 }
             }
-            Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
         }
