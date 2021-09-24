@@ -26,12 +26,14 @@ internal object HttpService {
     private fun httpPost(url: String, jsonObject: JSONObject) {
         val conn = URL(url).openConnection() as HttpsURLConnection
         try {
-            conn.setRequestProperty("connection", "close")
             conn.requestMethod = "POST"
+            conn.setRequestProperty("Connection", "close")
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+            // Explicitly tell the server to not gzip the response.
+            // Otherwise, HttpUrlsConnection will open a GzipInflater and not close it,
+            // which triggers a StrictMode violation
+            conn.setRequestProperty("Accept-Encoding", "identity")
             sendPostRequestContent(conn, jsonObject)
-            // Don't read any response from the server, the HttUrlConnection code would trigger
-            // a StrictMode violation related to a Zip inflator that is unclosed
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not send stats to server", e)
         } finally {
@@ -48,6 +50,8 @@ internal object HttpService {
                     writer.flush()
                 }
             }
+            // Only when reading the response, the request gets executed
+            Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
         }
