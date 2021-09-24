@@ -31,8 +31,8 @@ internal object HttpService {
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
             // Explicitly tell the server to not gzip the response.
             // Otherwise, HttpUrlsConnection will open a GzipInflater and not close it,
-            // which triggers a StrictMode violation
-            conn.setRequestProperty("Accept-Encoding", "identity")
+            // which triggers a StrictMode violation. Commented to demonstrate the violation
+            // conn.setRequestProperty("Accept-Encoding", "identity")
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not send stats to server", e)
