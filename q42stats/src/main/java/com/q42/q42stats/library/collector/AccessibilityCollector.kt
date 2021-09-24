@@ -30,6 +30,10 @@ internal object AccessibilityCollector {
         put("isAccessibilityManagerEnabled", accessibilityManager.isEnabled)
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
         put("isTalkBackEnabled", services.any { it.contains("talkback") })
+        put(
+            "isSamsungTalkbackEnabled",
+            services.any { it == "com.samsung.android.app.talkback.talkbackservice" }
+        )
         put("isVoiceAccessEnabled", services.any { it.contains("voiceaccess") })
         put("fontScale", configuration.fontScale)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

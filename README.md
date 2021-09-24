@@ -63,9 +63,11 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio |
 | `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar 
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
+| `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling |
+| `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
 
