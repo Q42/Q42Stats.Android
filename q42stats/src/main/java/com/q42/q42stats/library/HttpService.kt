@@ -32,6 +32,7 @@ internal object HttpService {
             // Explicitly tell the server to not gzip the response.
             // Otherwise, HttpUrlsConnection will open a GzipInflater and not close it,
             // which triggers a StrictMode violation
+            // https://issuetracker.google.com/issues/37069164#comment11
             conn.setRequestProperty("Accept-Encoding", "identity")
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
