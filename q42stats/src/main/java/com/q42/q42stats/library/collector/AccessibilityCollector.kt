@@ -42,15 +42,12 @@ internal object AccessibilityCollector {
                 context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEVICE_STABLE.toDouble()
             )
         }
-
-        put(
-            "isClosedCaptioningEnabled",
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            put(
+                "isClosedCaptioningEnabled",
                 (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
-            } else {
-                false
-            }
-        )
+            )
+        }
 
         put("enabledAccessibilityServices", services.toString())
 

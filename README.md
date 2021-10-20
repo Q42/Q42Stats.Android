@@ -53,20 +53,20 @@ Q42Stats.logLevel = Q42StatsLogLevel.Debug
 
 ## Data collected
 
-Not all fields are supported on all versions of Android. If unsupported, the corresponding value may be false, "unknown" or the key may be completely omitted.
+Not all fields are supported on all versions of Android. If unsupported, the corresponding key is omitted.
 
 ### Accessibliity
 
 | Key | Value | Notes |
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
-| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio |
+| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
 | `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar 
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling (minSdk 24)|
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
@@ -74,7 +74,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | Key | Value | Notes |
 |-|-|-|
 | `daytime`| day, twilight, night, unknown | Coarse estimation of time of day. unknown if user is not in Amsterdam TimeZone
-| `isNightModeEnabled` | bool | iOS: Dark Mode
+| `isNightModeEnabled` | bool | iOS: Dark Mode (minSdk: 29)
 
 ### Screen
 
