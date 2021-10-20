@@ -87,6 +87,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | Key | Value | Notes |
 |-|-|-|
 | `defaultLanguage`| en, nl, ... |
+| `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
 
 
 ## Development
