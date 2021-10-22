@@ -9,7 +9,13 @@ import com.q42.q42stats.library.collector.SystemCollector
 import kotlinx.coroutines.*
 import java.io.Serializable
 
-const val TAG = "Q42Stats"
+internal const val TAG = "Q42Stats"
+
+/**
+ * Version code for the data format that is sent to the server. Increment by 1 every time
+ * you add / remove / change a field in any of the Collector classes
+ */
+internal const val DATA_MODEL_VERSION = 2
 
 class Q42Stats(private val config: Q42StatsConfig) {
 
@@ -57,6 +63,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
     private fun collect(context: Context, prefs: Q42StatsPrefs): MutableMap<String, Serializable> {
         val collected = mutableMapOf<String, Serializable>()
 
+        collected["Stats Model Version"] = DATA_MODEL_VERSION
         collected["Stats Version"] = "Android ${BuildConfig.LIB_BUILD_DATE}"
         collected["Stats instance ID"] = prefs.getOrCreateInstallationId()
         collected["Stats timestamp"] = System.currentTimeMillis() / 1000L

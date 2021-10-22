@@ -99,6 +99,7 @@ This project contains a demo app which can simply be run without further setup. 
 
 This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.android). This makes publishing a new version very easy:
 
+1. In `Q42Stats.kt`, increment `DATA_MODEL_VERSION` by 1 if any changes to collected data is made.
 1. Push the code for the new version to the `main` branch
 1. Unit tests will be run automatically. Check [JitCI](https://jitci.com/gh/Q42/Q42Stats.Android) for status
 1. Create a tag in the semver format: `x.x.x` without the preceding `v.`
