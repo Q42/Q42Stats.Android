@@ -49,6 +49,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlinx_coroutines"
     implementation "androidx.annotation:annotation:$version_androidx_annotation"
 
+    implementation "com.google.android.gms:play-services-wallet:$version_google_wallet"
+
     testImplementation 'junit:junit:4.13.2'
     //json is included in Android, but not in Kotlin. This import makes it available for unit tests
     testImplementation 'org.json:json:20201115'

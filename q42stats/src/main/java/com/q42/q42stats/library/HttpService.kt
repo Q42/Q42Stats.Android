@@ -14,7 +14,7 @@ internal object HttpService {
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
         sendStatsSync(
             "https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/" +
-                    "databases/(default)/documents/${config.firestoreCollectionId}?mask.fieldPaths=_",
+                "databases/(default)/documents/${config.firestoreCollectionId}?mask.fieldPaths=_",
             data
         )
     }
@@ -36,7 +36,7 @@ internal object HttpService {
             conn.setRequestProperty("Accept-Encoding", "identity")
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
-            Q42StatsLogger.e(TAG, "Could not send stats to server", e)
+            Q42StatsLogger.e("Could not send stats to server", e)
         } finally {
             conn.disconnect()
         }
@@ -47,14 +47,14 @@ internal object HttpService {
             conn.outputStream.use { os ->
                 BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
                     writer.write(jsonObject.toString())
-                    Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
+                    Q42StatsLogger.d("Sending JSON: $jsonObject")
                     writer.flush()
                 }
             }
             // Only when reading the response, the request gets executed
-            Q42StatsLogger.d(TAG, "Response: ${conn.responseCode} ${conn.responseMessage}")
+            Q42StatsLogger.d("Response: ${conn.responseCode} ${conn.responseMessage}")
         } catch (e: Throwable) {
-            Q42StatsLogger.e(TAG, "Could not add data to POST request", e)
+            Q42StatsLogger.e("Could not add data to POST request", e)
         }
     }
 }
