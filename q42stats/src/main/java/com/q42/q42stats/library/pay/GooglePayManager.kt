@@ -7,18 +7,11 @@ import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.q42.q42stats.library.Q42StatsLogger
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class GooglePayManager(context: Context) {
-
-    // TODO add PAYPAL, needs PAYPAL_ACCOUNT_ID/merchant_id
-
-    enum class IsReadyToPayResponse {
-        TRUE, FALSE, UNKNOWN
-    }
 
     private val paymentsClient =
         Wallet.getPaymentsClient(
@@ -52,7 +45,7 @@ class GooglePayManager(context: Context) {
                             }
                         } catch (exception: Exception) {
                             Q42StatsLogger.w("Error fetching payment method", exception)
-                            IsReadyToPayResponse.UNKNOWN // TODO is UNKNOWN correct here?
+                            IsReadyToPayResponse.UNKNOWN // TODO is UNKNOWN correct here? it might be some temporary error
                         }
                     )
                 }
@@ -63,10 +56,8 @@ class GooglePayManager(context: Context) {
         }
 
     /**
-     * An object describing accepted forms of payment by your app, used to determine a viewer's
-     * readiness to pay.
-     * @return API version and payment methods supported by the app.
      * @see [IsReadyToPayRequest](https://developers.google.com/pay/api/android/reference/object.IsReadyToPayRequest)
+     * @throws JSONException
      */
     private fun createReadyToPayRequest(cardNetworks: List<String>) = IsReadyToPayRequest.fromJson(
         JSONObject().apply {
@@ -78,22 +69,25 @@ class GooglePayManager(context: Context) {
     )
 
     /**
-     * Describe your app's support for the CARD payment method.
-     * The provided properties are applicable to both an IsReadyToPayRequest and a
-     * PaymentDataRequest.
-     * @return A CARD PaymentMethod object describing accepted cards.
-     * @throws JSONException
      * @see [PaymentMethod](https://developers.google.com/pay/api/android/reference/object.PaymentMethod)
+     * @throws JSONException
      */
-// Optionally, you can add billing address/phone number associated with a CARD payment method.
     private fun createPaymentMethodsJson(cardNetworks: List<String>) =
         JSONArray().put(
             JSONObject().apply {
-                put("type", "CARD") // TODO PayPall
+                put(
+                    "type",
+                    "CARD"
+                ) // The Google Pay "add payment method" does not support PayPal in NL atm, so we don't check for PayPal.
                 put("parameters", JSONObject().apply {
                     put(
                         "allowedAuthMethods",
-                        JSONArray(GooglePayConfiguration.paymentMethods)
+                        JSONArray(
+                            listOf(
+                                "PAN_ONLY",
+                                "CRYPTOGRAM_3DS"
+                            )
+                        )
                     )
                     put("allowedCardNetworks", JSONArray(cardNetworks))
                 })
