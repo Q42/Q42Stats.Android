@@ -1,9 +1,9 @@
 package com.q42.q42stats.library.collector
 
 import android.content.Context
-import com.example.googlepay.GooglePayConfiguration.cardNetworks
-import com.example.googlepay.GooglePayManager
-import com.example.googlepay.GooglePayManager.IsReadyToPayResponse
+import com.q42.q42stats.library.pay.GooglePayConfiguration.cardNetworks
+import com.q42.q42stats.library.pay.GooglePayManager
+import com.q42.q42stats.library.pay.GooglePayManager.IsReadyToPayResponse
 import java.io.Serializable
 
 /** Collects Google Pay settings of the user */

@@ -1,4 +1,4 @@
-package com.example.googlepay
+package com.q42.q42stats.library.pay
 
 @JvmInline
 value class CardNetwork(val value: String)

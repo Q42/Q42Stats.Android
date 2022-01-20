@@ -1,4 +1,4 @@
-package com.example.googlepay
+package com.q42.q42stats.library.pay
 
 import android.content.Context
 import com.google.android.gms.common.api.ApiException
