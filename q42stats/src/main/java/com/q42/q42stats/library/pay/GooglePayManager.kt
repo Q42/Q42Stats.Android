@@ -16,7 +16,7 @@ class GooglePayManager(context: Context) {
 
     // TODO add PAYPAL, needs PAYPAL_ACCOUNT_ID/merchant_id
 
-    enum class SupportsGooglePayResponse {
+    enum class IsReadyToPayResponse {
         TRUE, FALSE, UNKNOWN
     }
 
@@ -28,27 +28,37 @@ class GooglePayManager(context: Context) {
                 .build()
         )
 
-    suspend fun checkIsReadyToPay(cardNetworks: List<CardNetwork>): SupportsGooglePayResponse =
+    suspend fun getSupportedCardNetworks(cardNetworks: List<CardNetwork>): Map<CardNetwork, IsReadyToPayResponse> =
+        mutableMapOf<CardNetwork, IsReadyToPayResponse>().apply {
+            cardNetworks.forEach { cardNetwork ->
+                put(cardNetwork, checkGooglePaySupport(cardNetwork))
+            }
+        }
+
+    /**
+     * We could test all cards at once, but we test every CardNetwork separately, so that we can
+     * log the exact CardNetwork of the user.
+     */
+    private suspend fun checkGooglePaySupport(cardNetwork: CardNetwork): IsReadyToPayResponse =
         suspendCoroutine { cont ->
             try {
-                val request =
-                    IsReadyToPayRequest.fromJson(createReadyToPayRequestJson(cardNetworks = cardNetworks.map { it.value }).toString())
+                val request = createReadyToPayRequest(listOf(cardNetwork.value))
                 paymentsClient.isReadyToPay(request).addOnCompleteListener { completedTask ->
-                    try {
-                        completedTask.getResult(ApiException::class.java)?.let { available ->
-                            cont.resume(
-                                if (available) SupportsGooglePayResponse.TRUE
-                                else SupportsGooglePayResponse.FALSE
-                            )
+                    cont.resume(
+                        try {
+                            when (completedTask.getResult(ApiException::class.java)) {
+                                true -> IsReadyToPayResponse.TRUE
+                                else -> IsReadyToPayResponse.FALSE
+                            }
+                        } catch (exception: Exception) {
+                            Q42StatsLogger.w("Error fetching payment method", exception)
+                            IsReadyToPayResponse.UNKNOWN // TODO is UNKNOWN correct here?
                         }
-                    } catch (exception: ApiException) {
-                        Q42StatsLogger.w("ApiException fetching payment method", exception)
-                        cont.resume(SupportsGooglePayResponse.UNKNOWN)
-                    }
+                    )
                 }
             } catch (exception: Exception) {
                 Q42StatsLogger.e("Unexpected error fetching payment method", exception)
-                cont.resume(SupportsGooglePayResponse.UNKNOWN)
+                cont.resume(IsReadyToPayResponse.UNKNOWN)
             }
         }
 
@@ -58,13 +68,14 @@ class GooglePayManager(context: Context) {
      * @return API version and payment methods supported by the app.
      * @see [IsReadyToPayRequest](https://developers.google.com/pay/api/android/reference/object.IsReadyToPayRequest)
      */
-    private fun createReadyToPayRequestJson(cardNetworks: List<String>) =
+    private fun createReadyToPayRequest(cardNetworks: List<String>) = IsReadyToPayRequest.fromJson(
         JSONObject().apply {
             put("apiVersion", 2)
             put("apiVersionMinor", 0)
             put("allowedPaymentMethods", createPaymentMethodsJson(cardNetworks))
             put("existingPaymentMethodRequired", true)
-        }
+        }.toString()
+    )
 
     /**
      * Describe your app's support for the CARD payment method.
@@ -74,7 +85,7 @@ class GooglePayManager(context: Context) {
      * @throws JSONException
      * @see [PaymentMethod](https://developers.google.com/pay/api/android/reference/object.PaymentMethod)
      */
-    // Optionally, you can add billing address/phone number associated with a CARD payment method.
+// Optionally, you can add billing address/phone number associated with a CARD payment method.
     private fun createPaymentMethodsJson(cardNetworks: List<String>) =
         JSONArray().put(
             JSONObject().apply {
@@ -82,7 +93,7 @@ class GooglePayManager(context: Context) {
                 put("parameters", JSONObject().apply {
                     put(
                         "allowedAuthMethods",
-                        JSONArray(GooglePayConfiguration.supportedPaymentMethods)
+                        JSONArray(GooglePayConfiguration.paymentMethods)
                     )
                     put("allowedCardNetworks", JSONArray(cardNetworks))
                 })

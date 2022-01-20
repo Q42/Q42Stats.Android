@@ -47,7 +47,7 @@ internal object HttpService {
             conn.outputStream.use { os ->
                 BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
                     writer.write(jsonObject.toString())
-                    Q42StatsLogger.d("Sending JSON: $jsonObject")
+                    Q42StatsLogger.d("Sending JSON: ${jsonObject.toString(4)}")
                     writer.flush()
                 }
             }

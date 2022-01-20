@@ -10,7 +10,7 @@ object GooglePayConfiguration {
      * specified here in their account, these will not be offered for them to choose in the popup.
      * @value #SUPPORTED_NETWORKS
      */
-    var supportedCardNetworks = listOf(
+    var cardNetworks = listOf(
         CardNetwork("AMEX"),
         CardNetwork("DISCOVER"),
         CardNetwork("JCB"),
@@ -26,7 +26,7 @@ object GooglePayConfiguration {
      *
      * @value #SUPPORTED_METHODS
      */
-    var supportedPaymentMethods = listOf(
+    var paymentMethods = listOf(
         "PAN_ONLY",
         "CRYPTOGRAM_3DS"
     )
