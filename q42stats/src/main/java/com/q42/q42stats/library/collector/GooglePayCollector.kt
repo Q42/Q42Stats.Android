@@ -6,10 +6,11 @@ import com.q42.q42stats.library.pay.cardNetworks
 import com.q42.q42stats.library.pay.isGooglePlayEnabled
 import java.io.Serializable
 
-/** Collects Google Pay settings of the user
+/**
+ * Collects Google Pay settings of the user
  *
- *  NOTE: The Google Pay "add payment method" does not support PayPal in NL atm, so we don't check
- *  for PayPal. We need to be a PayPal merchant to be able to do so.
+ * NOTE: The Google Pay "add payment method" does not support PayPal in NL atm, so we don't check
+ * for PayPal. We need to be a PayPal merchant to be able to do so.
  */
 internal object GooglePayCollector {
 
@@ -18,12 +19,12 @@ internal object GooglePayCollector {
         val googlePayManager = GooglePayManager(context)
         val cardNetworkResponses = googlePayManager.getSupportedCardNetworks(cardNetworks)
 
-        put("googlePayEnabled", cardNetworkResponses.isGooglePlayEnabled())
+        put("googlePay", cardNetworkResponses.isGooglePlayEnabled())
         cardNetworkResponses.forEach { (network, supportResponse) ->
             put(
                 "googlePayCard_${network.value}",
                 supportResponse
-            ) // TODO or other format?
+            )
         }
     }
 }

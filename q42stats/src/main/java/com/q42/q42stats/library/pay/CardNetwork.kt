@@ -4,7 +4,7 @@ package com.q42.q42stats.library.pay
 value class CardNetwork(val value: String)
 
 enum class IsReadyToPayResponse {
-    TRUE, FALSE, UNKNOWN
+    SUPPORTED, UNSUPPORTED, SUPPORT_UNKNOWN
 }
 
 /**
@@ -22,9 +22,9 @@ var cardNetworks = listOf(
 
 fun Map<CardNetwork, IsReadyToPayResponse>.isGooglePlayEnabled(): IsReadyToPayResponse =
     when {
-        any { it.value === IsReadyToPayResponse.TRUE } ->
-            IsReadyToPayResponse.TRUE
-        any { it.value === IsReadyToPayResponse.UNKNOWN } ->
-            IsReadyToPayResponse.UNKNOWN
-        else -> IsReadyToPayResponse.FALSE
+        any { it.value === IsReadyToPayResponse.SUPPORTED } ->
+            IsReadyToPayResponse.SUPPORTED
+        any { it.value === IsReadyToPayResponse.SUPPORT_UNKNOWN } ->
+            IsReadyToPayResponse.SUPPORT_UNKNOWN
+        else -> IsReadyToPayResponse.UNSUPPORTED
     }

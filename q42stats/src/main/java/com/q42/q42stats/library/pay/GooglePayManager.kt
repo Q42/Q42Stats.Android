@@ -40,33 +40,35 @@ class GooglePayManager(context: Context) {
                     cont.resume(
                         try {
                             when (completedTask.getResult(ApiException::class.java)) {
-                                true -> IsReadyToPayResponse.TRUE
-                                else -> IsReadyToPayResponse.FALSE
+                                true -> IsReadyToPayResponse.SUPPORTED
+                                else -> IsReadyToPayResponse.UNSUPPORTED
                             }
                         } catch (exception: Exception) {
                             Q42StatsLogger.w("Error fetching payment method", exception)
-                            IsReadyToPayResponse.UNKNOWN // TODO is UNKNOWN correct here? it might be some temporary error
+                            IsReadyToPayResponse.SUPPORT_UNKNOWN
                         }
                     )
                 }
             } catch (exception: Exception) {
                 Q42StatsLogger.e("Unexpected error fetching payment method", exception)
-                cont.resume(IsReadyToPayResponse.UNKNOWN)
+                cont.resume(IsReadyToPayResponse.SUPPORT_UNKNOWN)
             }
         }
+    // TODO test without play services
 
     /**
      * @see [IsReadyToPayRequest](https://developers.google.com/pay/api/android/reference/object.IsReadyToPayRequest)
      * @throws JSONException
      */
-    private fun createReadyToPayRequest(cardNetworks: List<String>) = IsReadyToPayRequest.fromJson(
-        JSONObject().apply {
-            put("apiVersion", 2)
-            put("apiVersionMinor", 0)
-            put("allowedPaymentMethods", createPaymentMethodsJson(cardNetworks))
-            put("existingPaymentMethodRequired", true)
-        }.toString()
-    )
+    private fun createReadyToPayRequest(cardNetworks: List<String>) =
+        IsReadyToPayRequest.fromJson(
+            JSONObject().apply {
+                put("apiVersion", 2)
+                put("apiVersionMinor", 0)
+                put("allowedPaymentMethods", createPaymentMethodsJson(cardNetworks))
+                put("existingPaymentMethodRequired", true)
+            }.toString()
+        )
 
     /**
      * @see [PaymentMethod](https://developers.google.com/pay/api/android/reference/object.PaymentMethod)

@@ -10,7 +10,6 @@ buildscript {
 
         compile_sdk_version = 31
         min_sdk_version = 19
-        // TODO min_sdk_version was 16, 19 is needed because Google Wallet uses Google Services version based on 19. Options: 1. okay, 2. not okay: make seperate classes and dependencies, 3. not okay, try older version of wallet
     }
     repositories {
         google()
