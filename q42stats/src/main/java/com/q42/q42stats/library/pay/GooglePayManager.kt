@@ -6,10 +6,13 @@ import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.q42.q42stats.library.Q42StatsLogger
+import com.q42.q42stats.library.util.suspendCoroutineWithTimeout
+import kotlinx.coroutines.TimeoutCancellationException
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+
+private const val CHECK_GOOGLE_PAY_TIMEOUT = 5000L
 
 class GooglePayManager(context: Context) {
 
@@ -33,8 +36,14 @@ class GooglePayManager(context: Context) {
      * log the exact CardNetwork of the user.
      */
     private suspend fun checkGooglePaySupport(cardNetwork: CardNetwork): IsReadyToPayResponse =
-        suspendCoroutine { cont ->
-            try {
+        try {
+
+            /**
+             * When there are no Play Services on the device, or when they are disabled, a bug in Google Wallet
+             * causes isReadyToPay to never return a response. This timeout makes sure we are
+             * not blocking the collection for too long when this happens.
+             */
+            suspendCoroutineWithTimeout(CHECK_GOOGLE_PAY_TIMEOUT) { cont ->
                 val request = createReadyToPayRequest(listOf(cardNetwork.value))
                 paymentsClient.isReadyToPay(request).addOnCompleteListener { completedTask ->
                     cont.resume(
@@ -44,18 +53,24 @@ class GooglePayManager(context: Context) {
                                 else -> IsReadyToPayResponse.UNSUPPORTED
                             }
                         } catch (exception: Exception) {
-                            Q42StatsLogger.w("Error fetching payment method", exception)
+                            Q42StatsLogger.w("Error fetching Google Pay details", exception)
                             IsReadyToPayResponse.SUPPORT_UNKNOWN
                         }
                     )
                 }
-            } catch (exception: Exception) {
-                Q42StatsLogger.e("Unexpected error fetching payment method", exception)
-                cont.resume(IsReadyToPayResponse.SUPPORT_UNKNOWN)
             }
+        } catch (e: TimeoutCancellationException) {
+            Q42StatsLogger.w("Timeout: are Play Services installed on this device?", e)
+            IsReadyToPayResponse.SUPPORT_UNKNOWN
+        } catch (e: Exception) {
+            Q42StatsLogger.e("Unexpected error fetching Google Pay details", e)
+            IsReadyToPayResponse.SUPPORT_UNKNOWN
         }
-    // TODO test without play services
 
+    /**
+     * @see [IsReadyToPayRequest](https://developers.google.com/pay/api/android/reference/object.IsReadyToPayRequest)
+     * @throws JSONException
+     */
     /**
      * @see [IsReadyToPayRequest](https://developers.google.com/pay/api/android/reference/object.IsReadyToPayRequest)
      * @throws JSONException
@@ -70,6 +85,10 @@ class GooglePayManager(context: Context) {
             }.toString()
         )
 
+    /**
+     * @see [PaymentMethod](https://developers.google.com/pay/api/android/reference/object.PaymentMethod)
+     * @throws JSONException
+     */
     /**
      * @see [PaymentMethod](https://developers.google.com/pay/api/android/reference/object.PaymentMethod)
      * @throws JSONException
