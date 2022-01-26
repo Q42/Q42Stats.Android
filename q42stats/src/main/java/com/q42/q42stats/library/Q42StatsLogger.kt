@@ -2,37 +2,39 @@ package com.q42.q42stats.library
 
 import android.util.Log
 
+private const val TAG = "Q42Stats"
+
 internal object Q42StatsLogger {
     /** logs with lower importance will be ignored */
     var logLevel = if (BuildConfig.DEBUG) Q42StatsLogLevel.Verbose else Q42StatsLogLevel.Error
 
-    fun v(tag: String, message: String) {
+    fun v(message: String) {
         if (logLevel <= Q42StatsLogLevel.Verbose) {
-            Log.v(tag, message)
+            Log.v(TAG, message)
         }
     }
 
-    fun d(tag: String, message: String) {
+    fun d(message: String) {
         if (logLevel <= Q42StatsLogLevel.Debug) {
-            Log.d(tag, message)
+            Log.d(TAG, message)
         }
     }
 
-    fun i(tag: String, message: String) {
+    fun i(message: String) {
         if (logLevel <= Q42StatsLogLevel.Info) {
-            Log.i(tag, message)
+            Log.i(TAG, message)
         }
     }
 
-    fun w(tag: String, message: String) {
+    fun w(message: String, e: Throwable? = null) {
         if (logLevel <= Q42StatsLogLevel.Warn) {
-            Log.w(tag, message)
+            Log.w(TAG, message, e)
         }
     }
 
-    fun e(tag: String, message: String, e: Throwable? = null) {
+    fun e(message: String, e: Throwable? = null) {
         if (logLevel <= Q42StatsLogLevel.Error) {
-            Log.e(tag, "$message: ${e?.message}", e)
+            Log.e(TAG, "$message: ${e?.message}", e)
         }
     }
 }
