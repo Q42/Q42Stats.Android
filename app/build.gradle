@@ -33,6 +33,7 @@ android {
     productFlavors {
         local {
             dimension "distribution"
+            isDefault = true
         }
 
         jitpack {
@@ -73,8 +74,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_androidx_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_androidx_lifecycle"
 
-//    localImplementation project(path: ':q42stats')
-//    jitpackImplementation 'com.github.q42:q42stats.android:1.0.5'
-
-    api project(':q42stats')
+    localImplementation project(path: ':q42stats')
+    jitpackImplementation 'com.github.q42:q42stats.android:1.0.5'
 }
