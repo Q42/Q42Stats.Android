@@ -7,7 +7,7 @@
 
     <application>
 
-        <!-- This element is required to use request Google Pay information -->
+        <!-- This element is required to request Google Pay information -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />

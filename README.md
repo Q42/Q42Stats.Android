@@ -89,6 +89,10 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `defaultLanguage`| en, nl, ... |
 | `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
 
+### Payment Methods
+|-|-|-|
+| `googlePay`| bool | true when at least one Google Pay payment method has been confirmed as available |
+| `googlePayCard_<network>` | SUPPORTED, UNSUPPORTED, SUPPORT_UNKNOWN | shows if this payment network (Visa, Mastercard, etc.) is supported, unsupported or unknown (an error occurred).
 
 ## Development
 

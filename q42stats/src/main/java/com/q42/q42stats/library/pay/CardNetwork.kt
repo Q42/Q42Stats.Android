@@ -1,9 +1,9 @@
 package com.q42.q42stats.library.pay
 
 @JvmInline
-value class CardNetwork(val value: String)
+internal value class CardNetwork(val value: String)
 
-enum class IsReadyToPayResponse {
+internal enum class IsReadyToPayResponse {
     SUPPORTED, UNSUPPORTED, SUPPORT_UNKNOWN
 }
 
@@ -12,7 +12,7 @@ enum class IsReadyToPayResponse {
  * specified here in their account, these will not be offered for them to choose in the popup.
  * @value #SUPPORTED_NETWORKS
  */
-var cardNetworks = listOf(
+internal var cardNetworks = listOf(
     CardNetwork("AMEX"),
     CardNetwork("DISCOVER"),
     CardNetwork("JCB"),
@@ -20,7 +20,7 @@ var cardNetworks = listOf(
     CardNetwork("VISA")
 )
 
-fun Map<CardNetwork, IsReadyToPayResponse>.isGooglePlayEnabled(): IsReadyToPayResponse =
+internal fun Map<CardNetwork, IsReadyToPayResponse>.isGooglePayEnabled(): IsReadyToPayResponse =
     when {
         any { it.value === IsReadyToPayResponse.SUPPORTED } ->
             IsReadyToPayResponse.SUPPORTED

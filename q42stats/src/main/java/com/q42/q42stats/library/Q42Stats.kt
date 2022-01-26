@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
-import com.q42.q42stats.library.collector.GooglePayCollector
+import com.q42.q42stats.library.collector.PaymentMethodsCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
 import kotlinx.coroutines.CoroutineScope
@@ -75,7 +75,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
         collected += AccessibilityCollector.collect(context)
         collected += PreferencesCollector.collect(context)
-        collected += GooglePayCollector.collect(context)
+        collected += PaymentMethodsCollector.collect(context)
         collected += SystemCollector.collect()
         return collected
     }

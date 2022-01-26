@@ -14,7 +14,7 @@ import kotlin.coroutines.resume
 
 private const val CHECK_GOOGLE_PAY_TIMEOUT = 5000L
 
-class GooglePayManager(context: Context) {
+internal class GooglePayManager(context: Context) {
 
     private val paymentsClient =
         Wallet.getPaymentsClient(
