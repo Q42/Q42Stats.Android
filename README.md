@@ -65,8 +65,8 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
-| `fontScale` | float | 1.0 is regular scaling |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling (minSdk 24)|
+| `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
