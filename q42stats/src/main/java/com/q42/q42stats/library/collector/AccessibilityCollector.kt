@@ -12,6 +12,8 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
+import com.q42.q42stats.library.Q42StatsLogger
+import com.q42.q42stats.library.TAG
 import java.io.Serializable
 import java.util.*
 
@@ -45,10 +47,12 @@ internal object AccessibilityCollector {
             )
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            put(
-                "isClosedCaptioningEnabled",
-                isClosedCaptioningEnabled(context)
-            )
+            isClosedCaptioningEnabled(context)?.let {
+                put(
+                    "isClosedCaptioningEnabled",
+                    it
+                )
+            }
         }
 
         put("enabledAccessibilityServices", services.toString())
@@ -62,18 +66,48 @@ internal object AccessibilityCollector {
                     else -> "unknown"
                 }
             })
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getSystemIntAsBool(
+                context,
+                Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED
+            )?.let {
+                put(
+                    "isColorInversionEnabled",
+                    it
+                )
+            }
+        }
+
+        getSystemIntAsBool(context, "accessibility_display_daltonizer_enabled")?.let {
+            put(
+                "isColorBlindModeEnabled",
+                it
+            )
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private fun isClosedCaptioningEnabled(context: Context): Boolean =
+    private fun isClosedCaptioningEnabled(context: Context): Boolean? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
         } else {
             // KitKat
-            Settings.Secure.getInt(
-                context.contentResolver,
-                "accessibility_captioning_enabled",
-                0
-            ) == 1
+            getSystemIntAsBool(context, "accessibility_captioning_enabled")
         }
+
+    /**
+     * @return null when the value could not be read
+     */
+    private fun getSystemIntAsBool(context: Context, name: String): Boolean? = try {
+        Settings.Secure.getInt(
+            context.contentResolver,
+            name,
+            0
+        ) == 1
+    } catch (e: Exception) {
+        Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
+        null
+    }
 }
