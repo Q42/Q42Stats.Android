@@ -61,9 +61,12 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
-| `isTouchExplorationEnabled` | bool | Wehether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar 
+| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
+| `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
+| `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
+| `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | 1.0 is regular scaling |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling (minSdk 24)|
@@ -107,5 +110,3 @@ This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.and
 1. Create a tag in the semver format: `x.x.x` without the preceding `v.`
 1. On GitHub, create a release from that tag. Give it the same name; `x.x.x`
 1. If everything went well the release will be visible on [JitPack](https://jitpack.io/#q42/q42stats.android) and the version number in the badge at the top of this page will update.
-
-

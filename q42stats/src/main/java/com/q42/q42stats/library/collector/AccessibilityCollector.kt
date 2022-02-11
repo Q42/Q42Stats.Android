@@ -25,20 +25,38 @@ internal object AccessibilityCollector {
             context.getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
         val configuration = context.resources.configuration
 
-        val services = accessibilityManager.getEnabledAccessibilityServiceList(
+        val serviceNamesLower = accessibilityManager.getEnabledAccessibilityServiceList(
             AccessibilityServiceInfo.FEEDBACK_ALL_MASK
         ).mapNotNull {
-            it.resolveInfo?.serviceInfo?.name?.toLowerCase(Locale.ROOT)
+            it.resolveInfo?.serviceInfo?.name?.lowercase(Locale.ROOT)
         }
 
         put("isAccessibilityManagerEnabled", accessibilityManager.isEnabled)
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
-        put("isTalkBackEnabled", services.any { it.contains("talkback") })
+        put(
+            "isTalkBackEnabled",
+            // match the service name specifically, as talkback packages might contain other services
+            serviceNamesLower.any { it.contains("talkbackservice") }
+        )
         put(
             "isSamsungTalkbackEnabled",
-            services.any { it == "com.samsung.android.app.talkback.talkbackservice" }
+            serviceNamesLower.any { it == "com.samsung.android.app.talkback.talkbackservice" }
         )
-        put("isVoiceAccessEnabled", services.any { it.contains("voiceaccess") })
+        put(
+            "isSelectToSpeakEnabled",
+            serviceNamesLower.any { it.contains("selecttospeak") }
+        )
+        put(
+            "isSwitchAccessEnabled",
+            serviceNamesLower.any { it.contains("switchaccess") }
+        )
+        put(
+            "isBrailleBackEnabled",
+            serviceNamesLower.any { it.contains("brailleback") }
+        )
+        put(
+            "isVoiceAccessEnabled",
+            serviceNamesLower.any { it.contains("voiceaccess", ignoreCase = true) })
         put("fontScale", configuration.fontScale)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             put(
@@ -55,7 +73,7 @@ internal object AccessibilityCollector {
             }
         }
 
-        put("enabledAccessibilityServices", services.toString())
+        put("enabledAccessibilityServices", serviceNamesLower.toString())
 
         put(
             "screenOrientation",
