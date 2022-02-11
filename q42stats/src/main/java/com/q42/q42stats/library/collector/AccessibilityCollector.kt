@@ -1,12 +1,14 @@
 package com.q42.q42stats.library.collector
 
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Context.ACCESSIBILITY_SERVICE
 import android.content.Context.CAPTIONING_SERVICE
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Build
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
@@ -45,7 +47,7 @@ internal object AccessibilityCollector {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             put(
                 "isClosedCaptioningEnabled",
-                (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
+                isClosedCaptioningEnabled(context)
             )
         }
 
@@ -61,4 +63,17 @@ internal object AccessibilityCollector {
                 }
             })
     }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private fun isClosedCaptioningEnabled(context: Context): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
+        } else {
+            // KitKat
+            Settings.Secure.getInt(
+                context.contentResolver,
+                "accessibility_captioning_enabled",
+                0
+            ) == 1
+        }
 }
