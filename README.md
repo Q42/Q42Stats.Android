@@ -68,10 +68,10 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
-| `fontScale` | float | 1.0 is regular scaling |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling (minSdk 24)|
+| `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
-| `isColorInversionEnabled` | bool | |` | bool | |
+| `isColorBlindModeEnabled` | bool | |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
@@ -93,6 +93,8 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 |-|-|-|
 | `defaultLanguage`| en, nl, ... |
 | `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
+|`manufacturer`|String|eg. `samsung`|
+|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
 
 
 ## Development

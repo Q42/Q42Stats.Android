@@ -1,5 +1,6 @@
 package com.q42.q42stats.library.collector
 
+import android.os.Build
 import java.io.Serializable
 import java.util.*
 
@@ -8,6 +9,9 @@ internal object SystemCollector {
 
     fun collect() = mutableMapOf<String, Serializable>().apply {
         put("defaultLanguage", Locale.getDefault().language) // language code like en or nl
-        put("sdkVersion", android.os.Build.VERSION.SDK_INT) // eg 16 for Android 4.1 Jelly Bean
+        put("sdkVersion", Build.VERSION.SDK_INT) // eg 16 for Android 4.1 Jelly Bean
+        put("manufacturer", Build.MANUFACTURER)
+        // Usually code names used during production. ie. D5503 For Sony Z1
+        put("modelName", Build.MODEL)
     }
 }
