@@ -71,7 +71,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `fontScale` | float | 1.0 is regular scaling |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. 1.0 is regular scaling (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
-| `isColorInversionEnabled` | bool | |` | bool | |
+| `isColorBlindModeEnabled` | bool | |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
