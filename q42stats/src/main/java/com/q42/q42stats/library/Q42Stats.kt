@@ -53,7 +53,6 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
             val payload: Map<String, Any> = mapOf<String, Any?>(
                 "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
-                "Stats instance ID" to prefs.getOrCreateInstallationId(),
                 "currentMeasurement" to currentMeasurement,
                 "previousMeasurement" to prefs.previousMeasurement
             ).filterValueNotNull()
