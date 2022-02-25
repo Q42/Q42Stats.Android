@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
+import com.q42.q42stats.library.util.filterValueNotNull
 import kotlinx.coroutines.*
 import java.io.Serializable
 
@@ -47,8 +48,18 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 return
             }
             Q42StatsLogger.i(TAG, "Q42Stats: Start")
-            val collected = collect(context, prefs).toFireStoreFormat()
-            HttpService.sendStatsSync(config, collected)
+
+            val currentMeasurement = collect(context)
+
+            val payload: Map<String, Any> = mapOf<String, Any?>(
+                "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
+                "Stats instance ID" to prefs.getOrCreateInstallationId(),
+                "currentMeasurement" to currentMeasurement,
+                "previousMeasurement" to prefs.previousMeasurement
+            ).filterValueNotNull()
+            HttpService.sendStatsSync(config, payload.toFireStoreFormat())
+
+            prefs.previousMeasurement = currentMeasurement
             prefs.updateSubmitTimestamp()
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Q42Stats encountered an error", e)
@@ -60,12 +71,10 @@ class Q42Stats(private val config: Q42StatsConfig) {
         }
     }
 
-    private fun collect(context: Context, prefs: Q42StatsPrefs): MutableMap<String, Serializable> {
+    private fun collect(context: Context): MutableMap<String, Serializable> {
         val collected = mutableMapOf<String, Serializable>()
 
         collected["Stats Model Version"] = DATA_MODEL_VERSION
-        collected["Stats Version"] = "Android ${BuildConfig.LIB_BUILD_DATE}"
-        collected["Stats instance ID"] = prefs.getOrCreateInstallationId()
         collected["Stats timestamp"] = System.currentTimeMillis() / 1000L
 
         collected += AccessibilityCollector.collect(context)

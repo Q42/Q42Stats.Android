@@ -15,11 +15,19 @@ import java.io.Serializable
  *     }
  * ```
  */
-internal fun Map<String, Serializable>.toFireStoreFormat(): JSONObject {
+internal fun Map<String, Any>.toFireStoreFormat(): JSONObject {
     val fireStoreMap = mapOf(
-        "fields" to this.mapValues {
-            mapOf("stringValue" to it.value.toString())
+        "fields" to this.mapValues { entry ->
+            mapFieldValue(entry)
         }
     )
     return JSONObject(fireStoreMap)
 }
+
+@Suppress("UNCHECKED_CAST")
+private fun mapFieldValue(entry: Map.Entry<String, Any>): Map<String, Any> =
+    ((entry.value as? Map<String, Serializable>) // is the value a Map?
+        ?.let {
+            mapOf("mapValue" to it.toFireStoreFormat())
+        }
+        ?: mapOf("stringValue" to entry.value.toString()))
