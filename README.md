@@ -25,26 +25,29 @@ Add the Jitpack repo and include the library:
 
 ## Usage
 
-Call `Q42Stats().runAsync(Context)` from anywhere in your app. 
-```kotlin
-class SampleApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        Q42Stats(
-            Q42StatsConfig(
-                firebaseProjectId = "theProject",
-                firestoreCollectionId = "theCollection",
-                // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
-                minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
-            )
-        ).runAsync(this.applicationContext)
+1. Get the API key from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key in the next step.
+
+1. Call `Q42Stats().runAsync(Context)` from anywhere in your app. 
+    ```kotlin
+    class SampleApplication : Application() {
+        override fun onCreate() {
+            super.onCreate()
+            Q42Stats(
+                Q42StatsConfig(
+                    apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    firestoreCollectionId = "theCollection",
+                    // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
+                    minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
+                )
+            ).runAsync(this.applicationContext)
+        }
     }
-}
-```
-This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
+    ```
+    This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
 
-It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
+    It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
 
+### Debug Logging
 By default, Q42Stats only logs errors. For debugging purposes, set the log level before using Q42Stats:
 
 ```
@@ -100,7 +103,13 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 ## Development
 
 ### Setup
-This project contains a demo app which can simply be run without further setup. By default it tries to send data to a non-existing Firestore database, so change the SampleApplication to construct a Q42Stats object for a real database if you want to test server interaction.
+1. Get the API key from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key in the next step.
+2. Create a file called `secrets.properties` in the root of the project (not in the app folder). Contents:
+    ```
+    apikey="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    ```
+    Note that this file will be ignored by git.
+3. Change the SampleApplication to construct a Q42Stats object for a real firestore collection.
 
 ### Publishing
 

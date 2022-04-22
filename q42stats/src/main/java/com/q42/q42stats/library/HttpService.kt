@@ -12,18 +12,14 @@ import javax.net.ssl.HttpsURLConnection
 internal object HttpService {
 
     fun sendStatsSync(config: Q42StatsConfig, data: JSONObject) {
-        sendStatsSync(
-            "https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/" +
-                    "databases/(default)/documents/${config.firestoreCollectionId}?mask.fieldPaths=_",
-            data
+        httpPost(
+            "https://q42stats.ew.r.appspot.com/add/${config.firestoreCollectionId}",
+            data,
+            config.apiKey
         )
     }
 
-    private fun sendStatsSync(url: String, data: JSONObject) {
-        httpPost(url, data)
-    }
-
-    private fun httpPost(url: String, jsonObject: JSONObject) {
+    private fun httpPost(url: String, jsonObject: JSONObject, apiKey: String) {
         val conn = URL(url).openConnection() as HttpsURLConnection
         try {
             conn.requestMethod = "POST"
@@ -34,6 +30,7 @@ internal object HttpService {
             // which triggers a StrictMode violation
             // https://issuetracker.google.com/issues/37069164#comment11
             conn.setRequestProperty("Accept-Encoding", "identity")
+            conn.setRequestProperty("X-Api-Key", apiKey)
             sendPostRequestContent(conn, jsonObject)
         } catch (e: Throwable) {
             Q42StatsLogger.e(TAG, "Could not send stats to server", e)

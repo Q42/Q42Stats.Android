@@ -3,11 +3,11 @@ package com.q42.q42stats.library
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FireStoreUtilsTest {
+class ApiFormatUtilTest {
     @Test
-    fun testToFireStoreFormat() {
+    fun testToQ42StatsApiFormat() {
         val expected =
-            """{"fields":{"screen width":{"stringValue":"360"},"textScale":{"stringValue":"1.6"},"language":{"stringValue":"nl"},"currentMeasurement":{"mapValue":{"fields":{"createdAt":{"stringValue":"1337"}}}},"talkbackEnabled":{"stringValue":"true"}}}"""
+            """{"screen width":"360","textScale":"1.6","language":"nl","currentMeasurement":{"createdAt":"1337"},"talkbackEnabled":"true"}"""
         val actual = mapOf(
             "screen width" to 360,
             "textScale" to 1.6,
@@ -16,7 +16,7 @@ class FireStoreUtilsTest {
             "currentMeasurement" to mapOf(
                 "createdAt" to 1337L
             )
-        ).toFireStoreFormat().toString()
+        ).toQ42StatsApiFormat().toString()
         assertEquals(expected, actual)
     }
 }

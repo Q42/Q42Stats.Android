@@ -56,7 +56,10 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 "currentMeasurement" to currentMeasurement,
                 "previousMeasurement" to prefs.previousMeasurement
             ).filterValueNotNull()
-            HttpService.sendStatsSync(config, payload.toFireStoreFormat())
+            HttpService.sendStatsSync(
+                config,
+                payload.toQ42StatsApiFormat()
+            )
 
             prefs.previousMeasurement = currentMeasurement
             prefs.updateSubmitTimestamp()

@@ -8,6 +8,7 @@ import android.os.StrictMode.VmPolicy
 import androidx.annotation.RequiresApi
 import com.q42.q42stats.library.Q42Stats
 import com.q42.q42stats.library.Q42StatsConfig
+import com.q42.q42stats.library.Q42StatsLogLevel
 
 
 @Suppress("unused") // SampleApplication is referenced from manifest only
@@ -17,10 +18,11 @@ class SampleApplication : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setStrictMode()
         }
+        Q42Stats.logLevel = Q42StatsLogLevel.Debug
         Q42Stats(
             Q42StatsConfig(
-                firebaseProjectId = "theProject",
-                firestoreCollectionId = "theCollection",
+                firestoreCollectionId = "testCollection",
+                apiKey = BuildConfig.API_KEY,
                 // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                 minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
             )
@@ -44,7 +46,7 @@ class SampleApplication : Application() {
                 .detectLeakedRegistrationObjects()
                 .detectLeakedSqlLiteObjects()
                 .detectLeakedClosableObjects()
-                //.detectNonSdkApiUsage() // exclude triggerÅed by AppCompatActivity
+                //.detectNonSdkApiUsage() // exclude triggered by AppCompatActivity
                 .detectCleartextNetwork()
                 .penaltyLog()
                 .build()
