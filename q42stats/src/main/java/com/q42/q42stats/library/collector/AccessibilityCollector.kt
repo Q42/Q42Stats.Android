@@ -39,7 +39,7 @@ internal object AccessibilityCollector {
             serviceNamesLower.any { it.contains("talkbackservice") }
         )
         put(
-            "isSamsungTalkbackEnabled",
+            "isSamsungTalkBackEnabled",
             serviceNamesLower.any { it == "com.samsung.android.app.talkback.talkbackservice" }
         )
         put(
