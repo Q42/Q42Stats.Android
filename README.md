@@ -121,3 +121,4 @@ This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.and
 1. Create a tag in the semver format: `x.x.x` without the preceding `v.`
 1. On GitHub, create a release from that tag. Give it the same name; `x.x.x`
 1. If everything went well the release will be visible on [JitPack](https://jitpack.io/#q42/q42stats.android) and the version number in the badge at the top of this page will update.
+1. In the Sample app build.gradle, Change the line `jitpackImplementation 'com.github.q42:q42stats.android:x.x.x` to the latest version.
