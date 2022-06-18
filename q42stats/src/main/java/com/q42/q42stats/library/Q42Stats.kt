@@ -81,7 +81,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
         collected += AccessibilityCollector.collect(context)
         collected += PreferencesCollector.collect(context)
-        collected += SystemCollector.collect()
+        collected += SystemCollector.collect(context)
         return collected
     }
 

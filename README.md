@@ -94,6 +94,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 
 | Key | Value | Notes |
 |-|-|-|
+| `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
 | `defaultLanguage`| en, nl, ... |
 | `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
 |`manufacturer`|String|eg. `samsung`|
