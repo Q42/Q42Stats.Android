@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlin_version = "1.6.10"
-        version_kotlinx_coroutines = "1.6.0"
+        version_kotlinx_coroutines = "1.6.3"
         gradle_version = '7.1.2'
         jvm_target = "11"
         version_androidx_annotation = "1.2.0"

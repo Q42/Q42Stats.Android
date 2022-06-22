@@ -21,31 +21,14 @@ internal const val DATA_MODEL_VERSION = 3
 class Q42Stats(private val config: Q42StatsConfig) {
 
     /**
-     * Collects stats and sends it to the server. This method is safe to be called from anywhere
-     * in your app and will do nothing if it is running or has already run before
-     */
-    @OptIn(DelicateCoroutinesApi::class)
-    @AnyThread
-    fun runAsync(context: Context) {
-        // Creating MainScope on the main thread would trigger a diskRead violation, so go to IO
-        CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
-            runAsync(context, MainScope() + coroutineExceptionHandler)
-        }
-    }
-
-    /**
-     * Collects stats and sends it to the server. This method can be called from anywhere
-     * in your app and will do nothing if it is running or has already run before.
-     *
-     * Although this overload is generally safe;
-     * Consider using [runAsync] instead for maximum error handling safety
-     *
-     * @param coroutineScope should be configured with an CoroutineExceptionHandler
-     *
+     *  Collects stats and sends it to the server. This method is safe to be called from anywhere
+     *  in your app and will do nothing if it is running or has already run before
      */
     @AnyThread
-    @DelicateCoroutinesApi
-    fun runAsync(context: Context, coroutineScope: CoroutineScope) {
+    fun runAsync(
+        context: Context,
+        coroutineScope: CoroutineScope = MainScope() + coroutineExceptionHandler
+    ) {
         Q42StatsLogger.d(TAG, "Q42Stats: Checking Preconditions")
         // check preconditions on the main thread to prevent concurrency issues
         coroutineScope.launch(Dispatchers.Main) {
