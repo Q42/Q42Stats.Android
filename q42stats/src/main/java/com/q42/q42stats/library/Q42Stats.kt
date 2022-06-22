@@ -24,19 +24,27 @@ class Q42Stats(private val config: Q42StatsConfig) {
      * Collects stats and sends it to the server. This method is safe to be called from anywhere
      * in your app and will do nothing if it is running or has already run before
      */
+    @OptIn(DelicateCoroutinesApi::class)
     @AnyThread
     fun runAsync(context: Context) {
         // Creating MainScope on the main thread would trigger a diskRead violation, so go to IO
-        CoroutineScope(Dispatchers.IO).launch {
-            runAsync(context, MainScope())
+        CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
+            runAsync(context, MainScope() + coroutineExceptionHandler)
         }
     }
 
     /**
-     * Collects stats and sends it to the server. This method is safe to be called from anywhere
-     * in your app and will do nothing if it is running or has already run before
+     * Collects stats and sends it to the server. This method can be called from anywhere
+     * in your app and will do nothing if it is running or has already run before.
+     *
+     * Although this overload is generally safe;
+     * Consider using [runAsync] instead for maximum error handling safety
+     *
+     * @param coroutineScope should be configured with an CoroutineExceptionHandler
+     *
      */
     @AnyThread
+    @DelicateCoroutinesApi
     fun runAsync(context: Context, coroutineScope: CoroutineScope) {
         Q42StatsLogger.d(TAG, "Q42Stats: Checking Preconditions")
         // check preconditions on the main thread to prevent concurrency issues
@@ -78,10 +86,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
             prefs.previousMeasurement = currentMeasurement
             prefs.updateSubmitTimestamp()
         } catch (e: Throwable) {
-            Q42StatsLogger.e(TAG, "Q42Stats encountered an error", e)
-            if (BuildConfig.DEBUG) {
-                throw e
-            }
+            handleException(e)
         } finally {
             Q42StatsLogger.i(TAG, "Q42Stats: Exit")
         }
@@ -109,5 +114,16 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
         /** A static job ensures that only a single instance of Q42Stats can be running */
         private var job: Job? = null
+
+        private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            handleException(throwable)
+        }
+
+        private fun handleException(e: Throwable) {
+            Q42StatsLogger.e(TAG, "Q42Stats encountered an error", e)
+            if (BuildConfig.DEBUG) {
+                throw e
+            }
+        }
     }
 }
