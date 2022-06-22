@@ -16,7 +16,7 @@ internal const val TAG = "Q42Stats"
  * Version code for the data format that is sent to the server. Increment by 1 every time
  * you add / remove / change a field in any of the Collector classes
  */
-internal const val DATA_MODEL_VERSION = 2
+internal const val DATA_MODEL_VERSION = 3
 
 class Q42Stats(private val config: Q42StatsConfig) {
 
