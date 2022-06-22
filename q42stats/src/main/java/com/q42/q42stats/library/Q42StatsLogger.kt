@@ -38,7 +38,7 @@ internal object Q42StatsLogger {
 }
 
 enum class Q42StatsLogLevel {
-    //Log levels in order of importance
+    // Log levels in order of low to high importance
     Verbose,
     Debug,
     Info,
