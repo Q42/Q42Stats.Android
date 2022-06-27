@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 
 private const val SHARED_PREFS_NAME = "Q42StatsPrefs"
 private const val LAST_SUBMIT_TIMESTAMP_KEY = "lastSubmitTimestamp"
+private const val PREVIOUS_MEASUREMENT_KEY = "previousMeasurement"
+private const val LAST_BATCH_ID_KEY = "lastBatchId"
 
 internal class Q42StatsPrefs(context: Context) {
     private val prefs: SharedPreferences =
@@ -27,10 +28,16 @@ internal class Q42StatsPrefs(context: Context) {
             apply()
         }
 
-    fun getOrCreateInstallationId(): String {
-        val uuid = prefs.getString(INSTALLATION_ID_KEY, null)
-        return uuid ?: createInstallationId()
-    }
+    var lastBatchId: String?
+        get() = prefs.getString(LAST_BATCH_ID_KEY, null)
+        set(value) = with(prefs.edit()) {
+            value?.let {
+                putString(LAST_BATCH_ID_KEY, it)
+            } ?: run {
+                remove(LAST_BATCH_ID_KEY)
+            }
+            apply()
+        }
 
     fun withinSubmitInterval(interval: Long) =
         System.currentTimeMillis() <
@@ -39,13 +46,6 @@ internal class Q42StatsPrefs(context: Context) {
     fun updateSubmitTimestamp() = with(prefs.edit()) {
         putLong(LAST_SUBMIT_TIMESTAMP_KEY, System.currentTimeMillis())
         apply()
-    }
-
-    private fun createInstallationId(): String = with(prefs.edit()) {
-        val uuid = UUID.randomUUID().toString()
-        putString(INSTALLATION_ID_KEY, uuid)
-        apply()
-        return uuid
     }
 
     private fun JSONObject.toMap(): Map<String, Any?> = keys().asSequence().associateWith {
@@ -61,6 +61,3 @@ internal class Q42StatsPrefs(context: Context) {
     }
 
 }
-
-private const val INSTALLATION_ID_KEY = "installationId"
-private const val PREVIOUS_MEASUREMENT_KEY = "previousMeasurement"

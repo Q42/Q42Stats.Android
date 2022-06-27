@@ -59,15 +59,20 @@ class Q42Stats(private val config: Q42StatsConfig) {
             val payload: Map<String, Any> = mapOf<String, Any?>(
                 "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
                 "currentMeasurement" to currentMeasurement,
-                "previousMeasurement" to prefs.previousMeasurement
+                "previousMeasurement" to prefs.previousMeasurement,
             ).filterValueNotNull()
-            HttpService.sendStatsSync(
+            val responseBody = HttpService.sendStatsSync(
                 config,
-                payload.toQ42StatsApiFormat()
+                payload.toQ42StatsApiFormat(),
+                prefs.lastBatchId
             )
+            responseBody?.let {
+                val batchId = it.getString("batchId") // throws if not found
+                prefs.lastBatchId = batchId
+                prefs.previousMeasurement = currentMeasurement
+                prefs.updateSubmitTimestamp()
+            }
 
-            prefs.previousMeasurement = currentMeasurement
-            prefs.updateSubmitTimestamp()
         } catch (e: Throwable) {
             handleException(e)
         } finally {
