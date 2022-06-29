@@ -72,6 +72,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
+| `fontWeightAdjustment` | int | If > 1, all on-screen text is displayed in bolder font. |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
@@ -95,7 +96,7 @@ Not all fields are supported on all versions of Android. If unsupported, the cor
 | Key | Value | Notes |
 |-|-|-|
 | `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
-| `defaultLanguage`| en, nl, ... |
+| `defaultLanguage`| en-GB, nl-BE, nl, ... | If the country part (-BE) is not available, the value is just the language part ("nl")
 | `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
 |`manufacturer`|String|eg. `samsung`|
 |`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
