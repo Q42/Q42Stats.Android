@@ -17,17 +17,16 @@ android {
 
         buildConfigField("String", "LIB_BUILD_DATE", '"' + new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + '"')
 
-        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            consumerProguardFiles 'proguard-rules.pro'
+            minifyEnabled false
+            // we don't want to minify the library, that's the consumer (implementing app)'s job
+            consumerProguardFiles 'consumer-rules.pro'
+            // will be copied into implementing app's proguard files
         }
     }
     compileOptions {
