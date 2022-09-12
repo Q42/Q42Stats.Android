@@ -70,12 +70,11 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 val batchId = it.getString("batchId") // throws if not found
                 prefs.lastBatchId = batchId
                 prefs.previousMeasurement = currentMeasurement
-                prefs.updateSubmitTimestamp()
             }
-
         } catch (e: Throwable) {
             handleException(e)
         } finally {
+            prefs.updateSubmitTimestamp() // make sure to always update the submit timestamp
             Q42StatsLogger.i(TAG, "Q42Stats: Exit")
         }
     }
