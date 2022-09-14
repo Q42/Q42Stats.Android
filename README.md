@@ -1,13 +1,14 @@
-# Q42Stats.Android 
+# Q42Stats.Android
+
 [![Release](https://jitpack.io/v/Q42/Q42Stats.Android.svg)](https://jitpack.io/#Q42/Q42Stats.Android)
 [![](https://jitci.com/gh/Q42/Q42Stats.Android/svg)](https://jitci.com/gh/Q42/Q42Stats.Android)
-
 
 Collect stats for Q42 internal usage, shared across multiple Android projects.
 
 An iOS version is also available: https://github.com/Q42/Q42Stats
 
 ## Installation
+
 Add the Jitpack repo and include the library:
 
 ```gradle
@@ -43,30 +44,44 @@ Add the Jitpack repo and include the library:
         }
     }
     ```
-    This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread. 
+    This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread.
 
-    It is safe to call this function multiple times, as it will exit immediately if it is already running or when a data collection interval has not passed yet.
+   It is safe to call this function multiple times, as it will exit immediately if it is already
+   running or when a data collection interval has not passed yet.
 
 ### Debug Logging
-By default, Q42Stats only logs errors. For debugging purposes, set the log level before using Q42Stats:
+
+By default, Q42Stats only logs errors. For debugging purposes, set the log level before using
+Q42Stats:
 
 ```
 Q42Stats.logLevel = Q42StatsLogLevel.Debug
 ```
 
+## Performance
+
+- Q42Stats is tiny, because it only depends on Kotlin. The library size is about 50kB.
+- Data consumption is also very modest. For each `minimumSubmitInterval` that you configure, about
+  5kB of data is transferred.
+- Data collection is run on an IO thread, so it doesn't block your application.
+
 ## Data collected
 
-Not all fields are supported on all versions of Android. If unsupported, the corresponding key is omitted.
+Q42Stats does not collect any personally identifiably information and is fully GDPR compliant. This
+has been verified by legal counsel. It should not be necesaary to ask users for permission before
+invoking Q42Stats.
+
+Below is a listing of all information gathered by Q42Stats. Not all fields are supported on all
+versions of Android. If unsupported, the corresponding key is omitted.
 
 ### Accessibliity
 
-| Key | Value | Notes |
-|-|-|-|
-| `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
-| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
-| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar
-| `isTalkBackEnabled` | bool | iOS: VoiceOver
-| `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
+| Key | Value | Notes | |-|-|-| | `isAccessibilityManagerEnabled` | bool | true when any
+accessibility service (eg. Talkback) is Enabled | | `isClosedCaptioningEnabled` | bool | Live
+transcription of any spoken audio (min sdk 19) | | `isTouchExplorationEnabled` | bool | Whether any
+assistive feature is enabled where the user navigates the interface by touch. Most probably
+TalkbBack, or similar | `isTalkBackEnabled` | bool | iOS: VoiceOver | `isSamsungTalkBackEnabled` |
+bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
 | `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
