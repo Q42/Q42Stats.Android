@@ -42,7 +42,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
     }
 
     @WorkerThread
-    private fun runSync(context: Context) {
+    private fun runSync(context: Context) = withPrefs(context) { prefs ->
         try {
             val prefs = Q42StatsPrefs(context)
             if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)) {
@@ -70,11 +70,21 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 val batchId = it.getString("batchId") // throws if not found
                 prefs.lastBatchId = batchId
                 prefs.previousMeasurement = currentMeasurement
+                prefs.updateSubmitTimestamp() // make sure to always update the submit timestamp
             }
         } catch (e: Throwable) {
             handleException(e)
         } finally {
-            prefs.updateSubmitTimestamp() // make sure to always update the submit timestamp
+            Q42StatsLogger.i(TAG, "Q42Stats: Exit")
+        }
+    }
+
+    private fun withPrefs(context: Context, action: (prefs: Q42StatsPrefs) -> Unit) {
+        try {
+            val prefs = Q42StatsPrefs(context)
+            action(prefs)
+        } catch (e: Throwable) {
+            handleException(e)
             Q42StatsLogger.i(TAG, "Q42Stats: Exit")
         }
     }
