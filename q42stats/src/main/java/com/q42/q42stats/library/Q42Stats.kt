@@ -6,8 +6,11 @@ import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
+import com.q42.q42stats.library.util.deserializeMeasurement
 import com.q42.q42stats.library.util.filterValueNotNull
+import com.q42.q42stats.library.util.serializeMeasurement
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.io.Serializable
 
 internal const val TAG = "Q42Stats"
@@ -56,20 +59,22 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
             val currentMeasurement = collect(context)
 
+            val previousMeasurement = prefs.previousMeasurement?.let { deserializeMeasurement(it) }
             val payload: Map<String, Any> = mapOf<String, Any?>(
                 "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
                 "currentMeasurement" to currentMeasurement,
-                "previousMeasurement" to prefs.previousMeasurement,
+                "previousMeasurement" to previousMeasurement,
             ).filterValueNotNull()
+            val serializedMeasurement = serializeMeasurement(payload.toQ42StatsApiFormat())
             val responseBody = HttpService.sendStatsSync(
                 config,
-                payload.toQ42StatsApiFormat(),
+                serializedMeasurement,
                 prefs.lastBatchId
             )
             responseBody?.let {
-                val batchId = it.getString("batchId") // throws if not found
+                val batchId = JSONObject(it).getString("batchId") // throws if not found
                 prefs.lastBatchId = batchId
-                prefs.previousMeasurement = currentMeasurement
+                prefs.previousMeasurement = serializedMeasurement
                 prefs.updateSubmitTimestamp()
             }
 

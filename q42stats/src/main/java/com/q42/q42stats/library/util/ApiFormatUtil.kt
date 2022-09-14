@@ -1,13 +1,12 @@
 package com.q42.q42stats.library
 
-import org.json.JSONObject
 import java.io.Serializable
 
-internal fun Map<String, Any>.toQ42StatsApiFormat(): JSONObject {
+internal fun Map<String, Any>.toQ42StatsApiFormat(): Map<String, Any> {
     val fireStoreMap = this.mapValues { entry ->
         mapFieldValue(entry)
     }
-    return JSONObject(fireStoreMap)
+    return fireStoreMap
 }
 
 @Suppress("UNCHECKED_CAST")

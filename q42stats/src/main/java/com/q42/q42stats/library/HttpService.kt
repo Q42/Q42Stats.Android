@@ -1,7 +1,6 @@
 package com.q42.q42stats.library
 
 import androidx.annotation.WorkerThread
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -14,18 +13,18 @@ import javax.net.ssl.HttpsURLConnection
 internal object HttpService {
 
     /** Sends stats and returns body as String if successful */
-    fun sendStatsSync(config: Q42StatsConfig, data: JSONObject, lastBatchId: String?): JSONObject? =
+    fun sendStatsSync(config: Q42StatsConfig, data: String, lastBatchId: String?): String? =
         httpPost(
             "https://q42stats.ew.r.appspot.com/add/${config.firestoreCollectionId}",
             data,
             config.apiKey,
             lastBatchId
-        )?.let { JSONObject(it) }
+        )
 }
 
 private fun httpPost(
     url: String,
-    jsonObject: JSONObject,
+    data: String,
     apiKey: String,
     lastBatchId: String?
 ): String? {
@@ -43,7 +42,7 @@ private fun httpPost(
         lastBatchId?.let {
             conn.setRequestProperty("batchId", it)
         }
-        return sendPostRequestContent(conn, jsonObject)
+        return sendPostRequestContent(conn, data)
     } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not send stats to server", e)
     } finally {
@@ -53,12 +52,12 @@ private fun httpPost(
     return null
 }
 
-private fun sendPostRequestContent(conn: HttpURLConnection, jsonObject: JSONObject): String? {
+private fun sendPostRequestContent(conn: HttpURLConnection, data: String): String? {
     try {
         conn.outputStream.use { os ->
             BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
-                writer.write(jsonObject.toString())
-                Q42StatsLogger.d(TAG, "Sending JSON: $jsonObject")
+                writer.write(data.toString())
+                Q42StatsLogger.d(TAG, "Sending JSON: $data")
                 writer.flush()
             }
         }
