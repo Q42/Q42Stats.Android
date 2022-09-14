@@ -46,46 +46,56 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
     @WorkerThread
     private fun runSync(context: Context) {
-        try {
-            val prefs = Q42StatsPrefs(context)
-            if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)) {
-                Q42StatsLogger.i(
-                    TAG,
-                    "Q42Stats were already sent in the last ${config.minimumSubmitIntervalSeconds} seconds."
-                )
-                return
-            }
-            Q42StatsLogger.i(TAG, "Q42Stats: Start")
+        withPrefs(context) { prefs ->
+            try {
+                if (prefs.withinSubmitInterval(config.minimumSubmitIntervalSeconds * 1000L)) {
+                    Q42StatsLogger.i(
+                        TAG,
+                        "Q42Stats were already sent in the last ${config.minimumSubmitIntervalSeconds} seconds."
+                    )
+                    return@withPrefs
+                }
+                Q42StatsLogger.i(TAG, "Q42Stats: Start")
 
-            val currentMeasurement = collect(context)
+                val currentMeasurement = collect(context)
 
-            val previousMeasurement: Map<String, Any?>? =
+                val previousMeasurement: Map<String, Any?>? =
                 prefs.previousMeasurement?.let { deserializeMeasurement(it) }
             val payload: Map<String, Any> = mapOf<String, Any?>(
                 "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
                 "currentMeasurement" to currentMeasurement,
                 "previousMeasurement" to previousMeasurement,
-            ).filterValueNotNull()
-            val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
+                ).filterValueNotNull()
+                val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
             val responseBody = HttpService.sendStatsSync(
                 config,
                 serializedPayload,
                 prefs.lastBatchId
             )
             responseBody?.let { body ->
-                val batchId = JSONObject(body).getString("batchId") // throws if not found
+                    val batchId = JSONObject(body).getString("batchId") // throws if not found
                 prefs.lastBatchId = batchId
                 prefs.previousMeasurement = currentMeasurement
                     .toQ42StatsApiFormat()
                     .let { q42StatsCurrentMeasurement ->
                         serializeMeasurement(q42StatsCurrentMeasurement)
                     }
-                prefs.updateSubmitTimestamp()
+                }
+            } catch (e: Throwable) {
+                handleException(e)
+            } finally {
+                prefs.updateSubmitTimestamp() // make sure to always update the submit timestamp
+                Q42StatsLogger.i(TAG, "Q42Stats: Exit")
             }
+        }
+    }
 
+    private fun withPrefs(context: Context, action: (prefs: Q42StatsPrefs) -> Unit) {
+        try {
+            val prefs = Q42StatsPrefs(context)
+            action(prefs)
         } catch (e: Throwable) {
             handleException(e)
-        } finally {
             Q42StatsLogger.i(TAG, "Q42Stats: Exit")
         }
     }
