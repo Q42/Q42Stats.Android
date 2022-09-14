@@ -129,12 +129,26 @@ bool | Specifically checks whether com.samsung.android.app.talkback.talkbackserv
 
 ### Publishing
 
-This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.android). This makes publishing a new version very easy:
+This library is distributed using [JitPack](https://jitpack.io/#q42/q42stats.android). This makes
+publishing a new version very easy:
 
 1. In `Q42Stats.kt`, increment `DATA_MODEL_VERSION` by 1 if any changes to collected data is made.
 1. Push the code for the new version to the `main` branch
-1. Unit tests will be run automatically. Check [JitCI](https://jitci.com/gh/Q42/Q42Stats.Android) for status
+1. Unit tests will be run automatically. Check [JitCI](https://jitci.com/gh/Q42/Q42Stats.Android)
+   for status
 1. Create a tag in the semver format: `x.x.x` without the preceding `v.`
 1. On GitHub, create a release from that tag. Give it the same name; `x.x.x`
-1. If everything went well the release will be visible on [JitPack](https://jitpack.io/#q42/q42stats.android) and the version number in the badge at the top of this page will update.
-1. In the Sample app build.gradle, Change the line `jitpackImplementation 'com.github.q42:q42stats.android:x.x.x` to the latest version.
+1. If everything went well the release will be visible
+   on [JitPack](https://jitpack.io/#q42/q42stats.android) and the version number in the badge at the
+   top of this page will update.
+1. In the Sample app build.gradle, Change the
+   line `jitpackImplementation 'com.github.q42:q42stats.android:x.x.x` to the latest version.
+
+### Troubleshooting
+
+- JitCi build failing while it can be successfully built locally
+
+  Perhaps something is broken in JitCi. JitPack can also be used for building and might be more
+  stable. To disable JitCi, select "Stop Building"
+  in [JitCi's](https://jitci.com/gh/Q42/Q42Stats.Android) settings page You will lose thebuild
+  status indicators in GitHub, however
