@@ -77,8 +77,8 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 prefs.lastBatchId = batchId
                 prefs.previousMeasurement = currentMeasurement
                     .toQ42StatsApiFormat()
-                    .let { q42StatsPrevMeasurement ->
-                        serializeMeasurement(q42StatsPrevMeasurement)
+                    .let { q42StatsCurrentMeasurement ->
+                        serializeMeasurement(q42StatsCurrentMeasurement)
                     }
                 prefs.updateSubmitTimestamp()
             }
