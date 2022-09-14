@@ -107,24 +107,36 @@ bool | Specifically checks whether com.samsung.android.app.talkback.talkbackserv
 
 ### System
 
-| Key | Value | Notes |
-|-|-|-|
-| `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
-| `defaultLanguage`| en, nl, ... |
-| `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
-|`manufacturer`|String|eg. `samsung`|
-|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
-
+| Key | Value | Notes | |-|-|-| | `applicationId` | String | identifier for the app for which data
+is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel | | `defaultLanguage`|
+en, nl, ... | | `sdkVersion` | int | 29 for Android
+10. [See this list](https://source.android.com/setup/start/build-numbers)
+|`manufacturer`|String|eg. `samsung`| |`modelName`|String| May be a marketing name, but more often
+an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
 
 ## Development
 
+All classes and functions that are not used by implementing apps should have `internal` visibility.
+
+Since this a library, all errors should be caught so that implementing apps don't crash. During
+development, you can use the debug flavors to allow the sample app to crash in cause of an
+Exception (see `handleException()`). When testing, use the release variants to make sure that
+exceptions don't crash the implementing apps.
+
+Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, this will make the
+lib more resilient to crashes.
+
 ### Setup
-1. Get the API key from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key in the next step.
-2. Create a file called `secrets.properties` in the root of the project (not in the app folder). Contents:
+
+1. Get the API key
+   from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key
+   in the next step.
+2. Create a file called `secrets.properties` in the root of the project (not in the app folder).
+   Contents:
     ```
     apikey="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
     ```
-    Note that this file will be ignored by git.
+   Note that this file will be ignored by git.
 3. Change the SampleApplication to construct a Q42Stats object for a real firestore collection.
 
 ### Publishing

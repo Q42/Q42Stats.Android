@@ -8,10 +8,10 @@ import java.io.Serializable
  *  a different hash, not being equal in comparisons etc.
  */
 internal fun Map<String, Any>.toQ42StatsApiFormat(): Map<String, Any> {
-    val fireStoreMap = this.mapValues { entry ->
+    val q42StatsMap = this.mapValues { entry ->
         mapFieldValue(entry)
     }
-    return fireStoreMap
+    return q42StatsMap
 }
 
 @Suppress("UNCHECKED_CAST")
