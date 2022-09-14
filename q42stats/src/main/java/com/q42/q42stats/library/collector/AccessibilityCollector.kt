@@ -124,7 +124,7 @@ internal object AccessibilityCollector {
             name,
             0
         ) == 1
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
         null
     }

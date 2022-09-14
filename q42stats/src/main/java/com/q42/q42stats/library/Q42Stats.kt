@@ -6,8 +6,11 @@ import androidx.annotation.WorkerThread
 import com.q42.q42stats.library.collector.AccessibilityCollector
 import com.q42.q42stats.library.collector.PreferencesCollector
 import com.q42.q42stats.library.collector.SystemCollector
+import com.q42.q42stats.library.util.deserializeMeasurement
 import com.q42.q42stats.library.util.filterValueNotNull
+import com.q42.q42stats.library.util.serializeMeasurement
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.io.Serializable
 
 internal const val TAG = "Q42Stats"
@@ -56,20 +59,27 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
                 val currentMeasurement = collect(context)
 
-                val payload: Map<String, Any> = mapOf<String, Any?>(
-                    "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
-                    "currentMeasurement" to currentMeasurement,
-                    "previousMeasurement" to prefs.previousMeasurement,
+                val previousMeasurement: Map<String, Any?>? =
+                prefs.previousMeasurement?.let { deserializeMeasurement(it) }
+            val payload: Map<String, Any> = mapOf<String, Any?>(
+                "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
+                "currentMeasurement" to currentMeasurement,
+                "previousMeasurement" to previousMeasurement,
                 ).filterValueNotNull()
-                val responseBody = HttpService.sendStatsSync(
-                    config,
-                    payload.toQ42StatsApiFormat(),
-                    prefs.lastBatchId
-                )
-                responseBody?.let {
-                    val batchId = it.getString("batchId") // throws if not found
-                    prefs.lastBatchId = batchId
-                    prefs.previousMeasurement = currentMeasurement
+                val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
+            val responseBody = HttpService.sendStatsSync(
+                config,
+                serializedPayload,
+                prefs.lastBatchId
+            )
+            responseBody?.let { body ->
+                    val batchId = JSONObject(body).getString("batchId") // throws if not found
+                prefs.lastBatchId = batchId
+                prefs.previousMeasurement = currentMeasurement
+                    .toQ42StatsApiFormat()
+                    .let { q42StatsCurrentMeasurement ->
+                        serializeMeasurement(q42StatsCurrentMeasurement)
+                    }
                 }
             } catch (e: Throwable) {
                 handleException(e)

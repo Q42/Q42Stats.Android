@@ -1,13 +1,17 @@
 package com.q42.q42stats.library
 
-import org.json.JSONObject
 import java.io.Serializable
 
-internal fun Map<String, Any>.toQ42StatsApiFormat(): JSONObject {
-    val fireStoreMap = this.mapValues { entry ->
+/** Returns a version of the input where all values are stringified
+ *  We do this to prevent serialize -> deserialize issues where the float 1.0 is transformed to 1,
+ *  for example. (this change is undesirable because the changed data type causes the object to have
+ *  a different hash, not being equal in comparisons etc.
+ */
+internal fun Map<String, Any>.toQ42StatsApiFormat(): Map<String, Any> {
+    val q42StatsMap = this.mapValues { entry ->
         mapFieldValue(entry)
     }
-    return JSONObject(fireStoreMap)
+    return q42StatsMap
 }
 
 @Suppress("UNCHECKED_CAST")
