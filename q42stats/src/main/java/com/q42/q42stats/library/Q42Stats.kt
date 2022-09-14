@@ -59,22 +59,27 @@ class Q42Stats(private val config: Q42StatsConfig) {
 
             val currentMeasurement = collect(context)
 
-            val previousMeasurement = prefs.previousMeasurement?.let { deserializeMeasurement(it) }
+            val previousMeasurement: Map<String, Any?>? =
+                prefs.previousMeasurement?.let { deserializeMeasurement(it) }
             val payload: Map<String, Any> = mapOf<String, Any?>(
                 "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
                 "currentMeasurement" to currentMeasurement,
                 "previousMeasurement" to previousMeasurement,
             ).filterValueNotNull()
-            val serializedMeasurement = serializeMeasurement(payload.toQ42StatsApiFormat())
+            val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
             val responseBody = HttpService.sendStatsSync(
                 config,
-                serializedMeasurement,
+                serializedPayload,
                 prefs.lastBatchId
             )
-            responseBody?.let {
-                val batchId = JSONObject(it).getString("batchId") // throws if not found
+            responseBody?.let { body ->
+                val batchId = JSONObject(body).getString("batchId") // throws if not found
                 prefs.lastBatchId = batchId
-                prefs.previousMeasurement = serializedMeasurement
+                prefs.previousMeasurement = currentMeasurement
+                    .toQ42StatsApiFormat()
+                    .let { q42StatsPrevMeasurement ->
+                        serializeMeasurement(q42StatsPrevMeasurement)
+                    }
                 prefs.updateSubmitTimestamp()
             }
 
