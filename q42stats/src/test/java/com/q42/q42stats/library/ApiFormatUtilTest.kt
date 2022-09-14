@@ -7,9 +7,10 @@ class ApiFormatUtilTest {
     @Test
     fun testToQ42StatsApiFormat() {
         val expected =
-            """{"screen width":"360","textScale":"1.6","language":"nl","currentMeasurement":{"createdAt":"1337"},"talkbackEnabled":"true"}"""
+            """{"screen width":"360","fontSize":"1.0","textScale":"1.6","language":"nl","currentMeasurement":{"createdAt":"1337"},"talkbackEnabled":"true"}"""
         val actual = mapOf(
             "screen width" to 360,
+            "fontSize" to 1.0, // expected is "1.0". should not be truncated to "1"
             "textScale" to 1.6,
             "talkbackEnabled" to true,
             "language" to "nl",
