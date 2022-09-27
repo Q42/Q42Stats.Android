@@ -104,6 +104,14 @@ internal object AccessibilityCollector {
                 it
             )
         }
+
+        getSystemIntAsBool(context, "high_text_contrast_enabled")?.let {
+            put(
+                "isHighTextContrastEnabled",
+                it
+            )
+        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

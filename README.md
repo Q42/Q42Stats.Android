@@ -94,6 +94,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
+| `isHighTextContrastEnabled` | bool | |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
@@ -131,6 +132,8 @@ exceptions don't crash the implementing apps.
 
 Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, this will make the
 lib more resilient to crashes.
+
+For accessibility properties we want to track but could not find a property for, see [Documentation.md](Documentation.md)
 
 ### Setup
 
