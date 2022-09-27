@@ -133,7 +133,7 @@ exceptions don't crash the implementing apps.
 Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, this will make the
 lib more resilient to crashes.
 
-For accessibility properties we want to track but could not find a property for, see [Documentation.md](Documentation.md)
+For accessibility properties we want to track but could not find a property for, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ### Setup
 
