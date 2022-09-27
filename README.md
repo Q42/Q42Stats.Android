@@ -94,6 +94,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
+| `isHighTextContrastEnabled` | bool | |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
