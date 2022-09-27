@@ -56,7 +56,7 @@ private fun sendPostRequestContent(conn: HttpURLConnection, data: String): Strin
     try {
         conn.outputStream.use { os ->
             BufferedWriter(OutputStreamWriter(os, "UTF-8")).use { writer ->
-                writer.write(data.toString())
+                writer.write(data)
                 Q42StatsLogger.d(TAG, "Sending JSON: $data")
                 writer.flush()
             }
