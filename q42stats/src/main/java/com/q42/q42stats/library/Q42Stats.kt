@@ -60,26 +60,26 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 val currentMeasurement = collect(context)
 
                 val previousMeasurement: Map<String, Any?>? =
-                prefs.previousMeasurement?.let { deserializeMeasurement(it) }
-            val payload: Map<String, Any> = mapOf<String, Any?>(
-                "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
-                "currentMeasurement" to currentMeasurement,
-                "previousMeasurement" to previousMeasurement,
+                    prefs.previousMeasurement?.let { deserializeMeasurement(it) }
+                val payload: Map<String, Any> = mapOf<String, Any?>(
+                    "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
+                    "currentMeasurement" to currentMeasurement,
+                    "previousMeasurement" to previousMeasurement,
                 ).filterValueNotNull()
                 val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
-            val responseBody = HttpService.sendStatsSync(
-                config,
-                serializedPayload,
-                prefs.lastBatchId
-            )
-            responseBody?.let { body ->
+                val responseBody = HttpService.sendStatsSync(
+                    config,
+                    serializedPayload,
+                    prefs.lastBatchId
+                )
+                responseBody?.let { body ->
                     val batchId = JSONObject(body).getString("batchId") // throws if not found
-                prefs.lastBatchId = batchId
-                prefs.previousMeasurement = currentMeasurement
-                    .toQ42StatsApiFormat()
-                    .let { q42StatsCurrentMeasurement ->
-                        serializeMeasurement(q42StatsCurrentMeasurement)
-                    }
+                    prefs.lastBatchId = batchId
+                    prefs.previousMeasurement = currentMeasurement
+                        .toQ42StatsApiFormat()
+                        .let { q42StatsCurrentMeasurement ->
+                            serializeMeasurement(q42StatsCurrentMeasurement)
+                        }
                 }
             } catch (e: Throwable) {
                 handleException(e)
