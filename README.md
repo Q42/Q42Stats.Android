@@ -26,9 +26,11 @@ Add the Jitpack repo and include the library:
 
 ## Usage
 
-1. Get the API key from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key in the next step.
+1. Get the API key
+   from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key
+   in the next step.
 
-1. Call `Q42Stats().runAsync(Context)` from anywhere in your app. 
+1. Call `Q42Stats().runAsync(Context)` from anywhere in your app.
     ```kotlin
     class SampleApplication : Application() {
         override fun onCreate() {
@@ -44,7 +46,8 @@ Add the Jitpack repo and include the library:
         }
     }
     ```
-    This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread.
+   This can be safely called from the main thread since all work (both collecting statistics and
+   sending them to the server) are done on an IO thread.
 
    It is safe to call this function multiple times, as it will exit immediately if it is already
    running or when a data collection interval has not passed yet.
@@ -76,12 +79,13 @@ versions of Android. If unsupported, the corresponding key is omitted.
 
 ### Accessibliity
 
-| Key | Value | Notes | |-|-|-| | `isAccessibilityManagerEnabled` | bool | true when any
-accessibility service (eg. Talkback) is Enabled | | `isClosedCaptioningEnabled` | bool | Live
-transcription of any spoken audio (min sdk 19) | | `isTouchExplorationEnabled` | bool | Whether any
-assistive feature is enabled where the user navigates the interface by touch. Most probably
-TalkbBack, or similar | `isTalkBackEnabled` | bool | iOS: VoiceOver | `isSamsungTalkBackEnabled` |
-bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
+| Key | Value | Notes |
+|-|-|-|
+| `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
+| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
+| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar
+| `isTalkBackEnabled` | bool | iOS: VoiceOver
+| `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
 | `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
@@ -107,12 +111,14 @@ bool | Specifically checks whether com.samsung.android.app.talkback.talkbackserv
 
 ### System
 
-| Key | Value | Notes | |-|-|-| | `applicationId` | String | identifier for the app for which data
-is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel | | `defaultLanguage`|
-en, nl, ... | | `sdkVersion` | int | 29 for Android
-10. [See this list](https://source.android.com/setup/start/build-numbers)
-|`manufacturer`|String|eg. `samsung`| |`modelName`|String| May be a marketing name, but more often
-an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
+| Key | Value | Notes |
+|-|-|-|
+| `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
+| `defaultLanguage`| en, nl, ... |
+| `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
+|`manufacturer`|String|eg. `samsung`|
+|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
+
 
 ## Development
 
