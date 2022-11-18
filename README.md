@@ -91,7 +91,6 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
-| `fontWeightAdjustment` | int | If > 1, all on-screen text is displayed in bolder font. |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |

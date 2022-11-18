@@ -68,13 +68,6 @@ internal object AccessibilityCollector {
             )
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            put(
-                "fontWeightAdjustment",
-                configuration.fontWeightAdjustment
-            )
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             isClosedCaptioningEnabled(context)?.let {
                 put(
