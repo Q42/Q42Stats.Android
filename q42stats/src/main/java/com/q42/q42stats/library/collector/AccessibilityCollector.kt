@@ -115,6 +115,14 @@ internal object AccessibilityCollector {
                 it
             )
         }
+
+        getSystemIntAsBool(context, "high_text_contrast_enabled")?.let {
+            put(
+                "isHighTextContrastEnabled",
+                it
+            )
+        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -135,7 +143,7 @@ internal object AccessibilityCollector {
             name,
             0
         ) == 1
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
         null
     }
