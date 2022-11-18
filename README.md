@@ -83,7 +83,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 |-|-|-|
 | `isAccessibilityManagerEnabled` | bool | true when any accessibility service (eg. Talkback) is Enabled | 
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
-| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkbBack, or similar
+| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkBack, or similar
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
