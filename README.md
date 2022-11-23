@@ -38,7 +38,7 @@ Add the Jitpack repo and include the library:
             Q42Stats(
                 Q42StatsConfig(
                     apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-                    firestoreCollectionId = "theCollection",
+                    firestoreCollectionId = "yourExistingFirestoreCollectionId",
                     // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                     minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
                 )
