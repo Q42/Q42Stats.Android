@@ -115,7 +115,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | Key | Value | Notes |
 |-|-|-|
 | `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
-| `defaultLanguage`| en, nl, ... |
+| `defaultLanguage`| en-GB, nl-BE, nl, ... | If the country part (-BE) is not available, the value is just the language part ("nl")
 | `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
 |`manufacturer`|String|eg. `samsung`|
 |`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|

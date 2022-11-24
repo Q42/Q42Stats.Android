@@ -57,13 +57,17 @@ internal object AccessibilityCollector {
         put(
             "isVoiceAccessEnabled",
             serviceNamesLower.any { it.contains("voiceaccess", ignoreCase = true) })
-        put("fontScale", configuration.fontScale)
+        put(
+            "fontScale",
+            configuration.fontScale
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             put(
                 "displayScale",
                 context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEVICE_STABLE.toDouble()
             )
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             isClosedCaptioningEnabled(context)?.let {
                 put(
