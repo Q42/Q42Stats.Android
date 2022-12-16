@@ -96,6 +96,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
 | `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline.  |
+| `isAnimationsDisabled` | bool | Can be disabled pre-Android 9 (<28) through Developer Options, starting from Android 9 possible to any user (minSdk >= 19). |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
