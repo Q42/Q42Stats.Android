@@ -62,7 +62,6 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 val previousMeasurement: Map<String, Any?>? =
                     prefs.previousMeasurement?.let { deserializeMeasurement(it) }
                 val payload: Map<String, Any> = mapOf<String, Any?>(
-                    "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
                     "currentMeasurement" to currentMeasurement,
                     "previousMeasurement" to previousMeasurement,
                 ).filterValueNotNull()
@@ -103,6 +102,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
     private fun collect(context: Context): MutableMap<String, Serializable> {
         val collected = mutableMapOf<String, Serializable>()
 
+        collected["Stats Version"] = "Android ${BuildConfig.LIB_BUILD_DATE}"
         collected["Stats Model Version"] = DATA_MODEL_VERSION
         collected["Stats timestamp"] = System.currentTimeMillis() / 1000L
 
