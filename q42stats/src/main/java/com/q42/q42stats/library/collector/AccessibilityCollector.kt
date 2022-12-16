@@ -60,13 +60,20 @@ internal object AccessibilityCollector {
             "fontScale",
             configuration.fontScale
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            put("fontWeightAdjustment", configuration.fontWeightAdjustment)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isMagnificationEnabled(context, serviceNamesLower)?.let {
+                put("isMagnificationEnabled", it)
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             put(
                 "displayScale",
                 context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEVICE_STABLE.toDouble()
             )
         }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             isClosedCaptioningEnabled(context)?.let {
                 put(
@@ -137,6 +144,28 @@ internal object AccessibilityCollector {
         ) == 1
     } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
+        null
+    }
+
+    /**
+     * This is a best-effort means of checking whether magnification is enabled or not. It involves checking by which
+     * method the user can toggle magnification. Ideally, we want to read [MagnificationController] for this check, but this would
+     * require creating an AccessibilityService together with necessary permissions which this library should certainly not do.
+     */
+    private fun isMagnificationEnabled(context: Context, serviceNames: List<String>): Boolean? = try {
+        val isMagnificationByTripleTapGesturesEnabled = getSystemIntAsBool(context,"accessibility_display_magnification_enabled") ?: false
+        val isMagnificationByVolumeButtonsEnabled = serviceNames.map { s -> s.lowercase() }.contains("com.example.android.apis.accessibility.magnificationservice")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val isMagnificationByNavigationButtonEnabled =
+                Settings.Secure.getString(context.contentResolver, "accessibility_button_targets").lowercase().contains("com.android.server.accessibility.magnificationcontroller")
+
+            isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled || isMagnificationByNavigationButtonEnabled
+        }else{
+            isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled
+        }
+    } catch (e: Throwable) {
+        Q42StatsLogger.e(TAG, "Could not read magnification. Returning null", e)
         null
     }
 }

@@ -81,7 +81,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 
 | Key | Value | Notes |
 |-|-|-| 
-| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (min sdk 19) |
+| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (minSdk >= 19) |
 | `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkBack, or similar
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
 | `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
@@ -90,10 +90,12 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
+| `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk >= 24)|
+| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). Some custom shortcuts |
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
-| `isHighTextContrastEnabled` | bool | |
+| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline.  |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
