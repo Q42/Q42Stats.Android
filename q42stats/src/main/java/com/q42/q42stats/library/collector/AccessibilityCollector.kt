@@ -1,7 +1,6 @@
 package com.q42.q42stats.library.collector
 
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Context.ACCESSIBILITY_SERVICE
 import android.content.Context.CAPTIONING_SERVICE
@@ -12,6 +11,7 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
+import androidx.annotation.RequiresApi
 import com.q42.q42stats.library.Q42StatsLogger
 import com.q42.q42stats.library.TAG
 import java.io.Serializable
@@ -82,6 +82,12 @@ internal object AccessibilityCollector {
                 )
             }
         }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            put(
+                "isAnimationsDisabled",
+                isAnimationsDisabled(context)
+            )
+        }
 
         put("enabledAccessibilityServices", serviceNamesLower.toString())
 
@@ -124,7 +130,7 @@ internal object AccessibilityCollector {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun isClosedCaptioningEnabled(context: Context): Boolean? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
@@ -134,24 +140,11 @@ internal object AccessibilityCollector {
         }
 
     /**
-     * @return null when the value could not be read
-     */
-    private fun getSystemIntAsBool(context: Context, name: String): Boolean? = try {
-        Settings.Secure.getInt(
-            context.contentResolver,
-            name,
-            0
-        ) == 1
-    } catch (e: Throwable) {
-        Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
-        null
-    }
-
-    /**
      * This is a best-effort means of checking whether magnification is enabled or not. It involves checking by which
-     * method the user can toggle magnification. Ideally, we want to read [MagnificationController] for this check, but this would
+     * method the user can toggle magnification. Ideally, we want to read MagnificationController for this check, but this would
      * require creating an AccessibilityService together with necessary permissions which this library should certainly not do.
      */
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun isMagnificationEnabled(context: Context, serviceNames: List<String>): Boolean? = try {
         val isMagnificationByTripleTapGesturesEnabled = getSystemIntAsBool(context,"accessibility_display_magnification_enabled") ?: false
         val isMagnificationByVolumeButtonsEnabled = serviceNames.map { s -> s.lowercase() }.contains("com.example.android.apis.accessibility.magnificationservice")
@@ -166,6 +159,26 @@ internal object AccessibilityCollector {
         }
     } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read magnification. Returning null", e)
+        null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun isAnimationsDisabled(context: Context): Boolean =
+        (Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f) == 0f
+                && Settings.Global.getFloat(context.contentResolver, Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f) == 0f
+                && Settings.Global.getFloat(context.contentResolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f) == 0f)
+
+    /**
+     * @return null when the value could not be read
+     */
+    private fun getSystemIntAsBool(context: Context, name: String): Boolean? = try {
+        Settings.Secure.getInt(
+            context.contentResolver,
+            name,
+            0
+        ) == 1
+    } catch (e: Throwable) {
+        Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
         null
     }
 }

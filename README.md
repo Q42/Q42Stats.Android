@@ -93,9 +93,10 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk >= 24)|
 | `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). |
-| `isColorInversionEnabled` | bool | |
+| `isColorInversionEnabled` | bool | Available starting from Android 5.0 (>=21) |
 | `isColorBlindModeEnabled` | bool | |
-| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline.  |
+| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline. Available starting from Android 5.0 (>=21)  |
+| `isAnimationsDisabled` | bool | Can be disabled pre-Android 9 (<28) through Developer Options, starting from Android 9 possible to any user (minSdk >= 19). |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
