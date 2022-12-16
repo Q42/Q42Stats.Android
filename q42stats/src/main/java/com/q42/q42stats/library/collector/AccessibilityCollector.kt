@@ -31,7 +31,6 @@ internal object AccessibilityCollector {
             it.resolveInfo?.serviceInfo?.name?.lowercase(Locale.ROOT)
         }
 
-        put("isAccessibilityManagerEnabled", accessibilityManager.isEnabled)
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
         put(
             "isTalkBackEnabled",
