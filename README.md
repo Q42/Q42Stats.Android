@@ -92,7 +92,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
 | `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
 | `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk >= 24)|
-| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). Some custom shortcuts |
+| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). |
 | `isColorInversionEnabled` | bool | |
 | `isColorBlindModeEnabled` | bool | |
 | `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline.  |
