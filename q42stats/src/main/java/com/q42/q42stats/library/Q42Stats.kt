@@ -19,7 +19,7 @@ internal const val TAG = "Q42Stats"
  * Version code for the data format that is sent to the server. Increment by 1 every time
  * you add / remove / change a field in any of the Collector classes
  */
-internal const val DATA_MODEL_VERSION = 3
+internal const val DATA_MODEL_VERSION = 4
 
 class Q42Stats(private val config: Q42StatsConfig) {
 
@@ -60,26 +60,25 @@ class Q42Stats(private val config: Q42StatsConfig) {
                 val currentMeasurement = collect(context)
 
                 val previousMeasurement: Map<String, Any?>? =
-                prefs.previousMeasurement?.let { deserializeMeasurement(it) }
-            val payload: Map<String, Any> = mapOf<String, Any?>(
-                "Stats Version" to "Android ${BuildConfig.LIB_BUILD_DATE}",
-                "currentMeasurement" to currentMeasurement,
-                "previousMeasurement" to previousMeasurement,
+                    prefs.previousMeasurement?.let { deserializeMeasurement(it) }
+                val payload: Map<String, Any> = mapOf<String, Any?>(
+                    "currentMeasurement" to currentMeasurement,
+                    "previousMeasurement" to previousMeasurement,
                 ).filterValueNotNull()
                 val serializedPayload = serializeMeasurement(payload.toQ42StatsApiFormat())
-            val responseBody = HttpService.sendStatsSync(
-                config,
-                serializedPayload,
-                prefs.lastBatchId
-            )
-            responseBody?.let { body ->
+                val responseBody = HttpService.sendStatsSync(
+                    config,
+                    serializedPayload,
+                    prefs.lastBatchId
+                )
+                responseBody?.let { body ->
                     val batchId = JSONObject(body).getString("batchId") // throws if not found
-                prefs.lastBatchId = batchId
-                prefs.previousMeasurement = currentMeasurement
-                    .toQ42StatsApiFormat()
-                    .let { q42StatsCurrentMeasurement ->
-                        serializeMeasurement(q42StatsCurrentMeasurement)
-                    }
+                    prefs.lastBatchId = batchId
+                    prefs.previousMeasurement = currentMeasurement
+                        .toQ42StatsApiFormat()
+                        .let { q42StatsCurrentMeasurement ->
+                            serializeMeasurement(q42StatsCurrentMeasurement)
+                        }
                 }
             } catch (e: Throwable) {
                 handleException(e)
@@ -103,6 +102,7 @@ class Q42Stats(private val config: Q42StatsConfig) {
     private fun collect(context: Context): MutableMap<String, Serializable> {
         val collected = mutableMapOf<String, Serializable>()
 
+        collected["Stats Version"] = "Android ${BuildConfig.LIB_BUILD_DATE}"
         collected["Stats Model Version"] = DATA_MODEL_VERSION
         collected["Stats timestamp"] = System.currentTimeMillis() / 1000L
 

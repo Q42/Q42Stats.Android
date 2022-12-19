@@ -1,7 +1,6 @@
 package com.q42.q42stats.library.collector
 
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Context.ACCESSIBILITY_SERVICE
 import android.content.Context.CAPTIONING_SERVICE
@@ -12,6 +11,7 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
+import androidx.annotation.RequiresApi
 import com.q42.q42stats.library.Q42StatsLogger
 import com.q42.q42stats.library.TAG
 import java.io.Serializable
@@ -31,7 +31,6 @@ internal object AccessibilityCollector {
             it.resolveInfo?.serviceInfo?.name?.lowercase(Locale.ROOT)
         }
 
-        put("isAccessibilityManagerEnabled", accessibilityManager.isEnabled)
         put("isTouchExplorationEnabled", accessibilityManager.isTouchExplorationEnabled)
         put(
             "isTalkBackEnabled",
@@ -57,7 +56,18 @@ internal object AccessibilityCollector {
         put(
             "isVoiceAccessEnabled",
             serviceNamesLower.any { it.contains("voiceaccess", ignoreCase = true) })
-        put("fontScale", configuration.fontScale)
+        put(
+            "fontScale",
+            configuration.fontScale
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            put("fontWeightAdjustment", configuration.fontWeightAdjustment)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isMagnificationEnabled(context, serviceNamesLower)?.let {
+                put("isMagnificationEnabled", it)
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             put(
                 "displayScale",
@@ -71,6 +81,12 @@ internal object AccessibilityCollector {
                     it
                 )
             }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            put(
+                "isAnimationsDisabled",
+                isAnimationsDisabled(context)
+            )
         }
 
         put("enabledAccessibilityServices", serviceNamesLower.toString())
@@ -104,9 +120,17 @@ internal object AccessibilityCollector {
                 it
             )
         }
+
+        getSystemIntAsBool(context, "high_text_contrast_enabled")?.let {
+            put(
+                "isHighTextContrastEnabled",
+                it
+            )
+        }
+
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun isClosedCaptioningEnabled(context: Context): Boolean? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             (context.getSystemService(CAPTIONING_SERVICE) as CaptioningManager).isEnabled
@@ -114,6 +138,35 @@ internal object AccessibilityCollector {
             // KitKat
             getSystemIntAsBool(context, "accessibility_captioning_enabled")
         }
+
+    /**
+     * This is a best-effort means of checking whether magnification is enabled or not. It involves checking by which
+     * method the user can toggle magnification. Ideally, we want to read MagnificationController for this check, but this would
+     * require creating an AccessibilityService together with necessary permissions which this library should certainly not do.
+     */
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun isMagnificationEnabled(context: Context, serviceNames: List<String>): Boolean? = try {
+        val isMagnificationByTripleTapGesturesEnabled = getSystemIntAsBool(context,"accessibility_display_magnification_enabled") ?: false
+        val isMagnificationByVolumeButtonsEnabled = serviceNames.map { s -> s.lowercase() }.contains("com.example.android.apis.accessibility.magnificationservice")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val isMagnificationByNavigationButtonEnabled =
+                Settings.Secure.getString(context.contentResolver, "accessibility_button_targets").lowercase().contains("com.android.server.accessibility.magnificationcontroller")
+
+            isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled || isMagnificationByNavigationButtonEnabled
+        }else{
+            isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled
+        }
+    } catch (e: Throwable) {
+        Q42StatsLogger.e(TAG, "Could not read magnification. Returning null", e)
+        null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun isAnimationsDisabled(context: Context): Boolean =
+        (Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f) == 0f
+                && Settings.Global.getFloat(context.contentResolver, Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f) == 0f
+                && Settings.Global.getFloat(context.contentResolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f) == 0f)
 
     /**
      * @return null when the value could not be read

@@ -26,9 +26,11 @@ Add the Jitpack repo and include the library:
 
 ## Usage
 
-1. Get the API key from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key in the next step.
+1. Get the API key
+   from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key
+   in the next step.
 
-1. Call `Q42Stats().runAsync(Context)` from anywhere in your app. 
+1. Call `Q42Stats().runAsync(Context)` from anywhere in your app.
     ```kotlin
     class SampleApplication : Application() {
         override fun onCreate() {
@@ -36,7 +38,7 @@ Add the Jitpack repo and include the library:
             Q42Stats(
                 Q42StatsConfig(
                     apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-                    firestoreCollectionId = "theCollection",
+                    firestoreCollectionId = "yourExistingFirestoreCollectionId",
                     // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                     minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
                 )
@@ -44,7 +46,8 @@ Add the Jitpack repo and include the library:
         }
     }
     ```
-    This can be safely called from the main thread since all work (both collecting statistics and sending them to the server) are done on an IO thread.
+   This can be safely called from the main thread since all work (both collecting statistics and
+   sending them to the server) are done on an IO thread.
 
    It is safe to call this function multiple times, as it will exit immediately if it is already
    running or when a data collection interval has not passed yet.
@@ -76,20 +79,24 @@ versions of Android. If unsupported, the corresponding key is omitted.
 
 ### Accessibliity
 
-| Key | Value | Notes | |-|-|-| | `isAccessibilityManagerEnabled` | bool | true when any
-accessibility service (eg. Talkback) is Enabled | | `isClosedCaptioningEnabled` | bool | Live
-transcription of any spoken audio (min sdk 19) | | `isTouchExplorationEnabled` | bool | Whether any
-assistive feature is enabled where the user navigates the interface by touch. Most probably
-TalkbBack, or similar | `isTalkBackEnabled` | bool | iOS: VoiceOver | `isSamsungTalkBackEnabled` |
-bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
+| Key | Value | Notes |
+|-|-|-| 
+| `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (minSdk >= 19) |
+| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkBack, or similar
+| `isTalkBackEnabled` | bool | iOS: VoiceOver
+| `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
 | `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
 | `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
 | `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk 24)|
-| `isColorInversionEnabled` | bool | |
+| `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk >= 24)|
+| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). |
+| `isColorInversionEnabled` | bool | Available starting from Android 5.0 (>=21) |
 | `isColorBlindModeEnabled` | bool | |
+| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline. Available starting from Android 5.0 (>=21)  |
+| `isAnimationsDisabled` | bool | Can be disabled pre-Android 9 (<28) through Developer Options, starting from Android 9 possible to any user (minSdk >= 19). |
 | `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
@@ -107,12 +114,14 @@ bool | Specifically checks whether com.samsung.android.app.talkback.talkbackserv
 
 ### System
 
-| Key | Value | Notes | |-|-|-| | `applicationId` | String | identifier for the app for which data
-is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel | | `defaultLanguage`|
-en, nl, ... | | `sdkVersion` | int | 29 for Android
-10. [See this list](https://source.android.com/setup/start/build-numbers)
-|`manufacturer`|String|eg. `samsung`| |`modelName`|String| May be a marketing name, but more often
-an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
+| Key | Value | Notes |
+|-|-|-|
+| `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
+| `defaultLanguage`| en-GB, nl-BE, nl, ... | If the country part (-BE) is not available, the value is just the language part ("nl")
+| `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
+|`manufacturer`|String|eg. `samsung`|
+|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
+
 
 ## Development
 
@@ -125,6 +134,8 @@ exceptions don't crash the implementing apps.
 
 Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, this will make the
 lib more resilient to crashes.
+
+For accessibility properties we want to track but could not find a property for, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ### Setup
 
