@@ -111,6 +111,7 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | Key | Value | Notes |
 |-|-|-|
 | `screenOrientation`| portrait, landscape, unknown |
+| `screenSize` | String | Screen size in density-independent pixels and portrait mode.  |
 
 ### System
 
