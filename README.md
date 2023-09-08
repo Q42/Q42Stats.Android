@@ -80,30 +80,40 @@ versions of Android. If unsupported, the corresponding key is omitted.
 ### Accessibliity
 
 | Key | Value | Notes |
-|-|-|-| 
+|-|-|-|
 | `isClosedCaptioningEnabled` | bool | Live transcription of any spoken audio (minSdk >= 19) |
-| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user navigates the interface by touch. Most probably TalkBack, or similar
+| `isTouchExplorationEnabled` | bool | Whether any assistive feature is enabled where the user
+navigates the interface by touch. Most probably TalkBack, or similar
 | `isTalkBackEnabled` | bool | iOS: VoiceOver
-| `isSamsungTalkBackEnabled` | bool | Specifically checks whether com.samsung.android.app.talkback.talkbackservice is enabled
+| `isSamsungTalkBackEnabled` | bool | Specifically checks whether
+com.samsung.android.app.talkback.talkbackservice is enabled
 | `isSelectToSpeakEnabled` | bool | iOS: Speak Selection
 | `isSwitchAccessEnabled` | bool | Control the device by a switch such as a foot pedal
 | `isBrailleBackEnabled` | bool | Navigate the screen with an external Braille display
 | `isVoiceAccessEnabled` | bool | iOS: Voice Control
-| `fontScale` | float | Default value depends on device model. Some devices have a default font scaling of 1.1, for example |
-| `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
-| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may depend on device model (minSdk >= 24)|
-| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether magnification shortcuts are enabled) (minSdk >= 17). |
+| `fontScale` | float | Default value depends on device model. Some devices have a default font
+scaling of 1.1, for example |
+| `fontWeightAdjustment` | float | Default value is: 0. When bold text is enabled this value is
+greater than 0 (minSdk >= 31). Known issue: Always returns 0 on Samsung |
+| `displayScale` | float | Overall interface scaling ie. display density scaling. Default value may
+depend on device model (minSdk >= 24)|
+| `isMagnificationEnabled` | bool | Whether magnification is enabled (more specifically, whether
+magnification shortcuts are enabled) (minSdk >= 17). |
 | `isColorInversionEnabled` | bool | Available starting from Android 5.0 (>=21) |
 | `isColorBlindModeEnabled` | bool | |
-| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline. Available starting from Android 5.0 (>=21)  |
-| `isAnimationsDisabled` | bool | Can be disabled pre-Android 9 (<28) through Developer Options, starting from Android 9 possible to any user (minSdk >= 19). |
-| `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names, eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
+| `isHighTextContrastEnabled` | bool | When enabled, all text has a thin outline. Available starting
+from Android 5.0 (>=21)  |
+| `isAnimationsDisabled` | bool | Can be disabled pre-Android 9 (<28) through Developer Options,
+starting from Android 9 possible to any user (minSdk >= 19). |
+| `enabledAccessibilityServices` | Array\<String\> | List of enabled accessibility package names,
+eg ['com.accessibility.service1', 'nl.accessibility.service2'] |
 
 ### Preferences
 
 | Key | Value | Notes |
 |-|-|-|
-| `daytime`| day, twilight, night, unknown | Coarse estimation of time of day. unknown if user is not in Amsterdam TimeZone
+| `daytime`| day, twilight, night, unknown | Coarse estimation of time of day. unknown if user is
+not in Amsterdam TimeZone
 | `isNightModeEnabled` | bool | iOS: Dark Mode (minSdk: 29)
 
 ### Screen
@@ -111,18 +121,24 @@ versions of Android. If unsupported, the corresponding key is omitted.
 | Key | Value | Notes |
 |-|-|-|
 | `screenOrientation`| portrait, landscape, unknown |
-| `screenWidth` | String | Screen width in density-independent pixels and portrait mode.  |
+| `screenWidth` | String | Screen width in density-independent pixels. Beware: this value is
+different when there is a different screen orientation. |
+| `screenHeight` | String | Screen height in density-independent pixels. Beware: this value is
+different when there is a different screen orientation. |
 
 ### System
 
 | Key | Value | Notes |
 |-|-|-|
-| `applicationId` | String | identifier for the app for which data is collected, as set in the app's Manifest. iOS: bundleId | nl.hema.mobiel |
-| `defaultLanguage`| en-GB, nl-BE, nl, ... | If the country part (-BE) is not available, the value is just the language part ("nl")
-| `sdkVersion` | int | 29 for Android 10. [See this list](https://source.android.com/setup/start/build-numbers)
+| `applicationId` | String | identifier for the app for which data is collected, as set in the app's
+Manifest. iOS: bundleId | nl.hema.mobiel |
+| `defaultLanguage`| en-GB, nl-BE, nl, ... | If the country part (-BE) is not available, the value
+is just the language part ("nl")
+| `sdkVersion` | int | 29 for Android
+10. [See this list](https://source.android.com/setup/start/build-numbers)
 |`manufacturer`|String|eg. `samsung`|
-|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F` for a particular variant of a Samsung Galaxy S10|
-
+|`modelName`|String| May be a marketing name, but more often an internal code name. eg. `SM-G980F`
+for a particular variant of a Samsung Galaxy S10|
 
 ## Development
 
@@ -136,7 +152,8 @@ exceptions don't crash the implementing apps.
 Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, this will make the
 lib more resilient to crashes.
 
-For accessibility properties we want to track but could not find a property for, see [DOCUMENTATION.md](DOCUMENTATION.md)
+For accessibility properties we want to track but could not find a property for,
+see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ### Setup
 
