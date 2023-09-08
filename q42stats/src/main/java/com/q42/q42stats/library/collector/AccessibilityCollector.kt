@@ -105,7 +105,7 @@ internal object AccessibilityCollector {
 
         getScreenSize(context)?.let {
             put(
-                "screenSize",
+                "screenWidth",
                 it
             )
         }
@@ -195,7 +195,7 @@ internal object AccessibilityCollector {
      *
      * Note: calculates size given portrait mode.
      */
-    private fun getScreenSize(context: Context): Pair<Int, Int>? {
+    private fun getScreenSize(context: Context): Int? {
         return try {
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val resources = context.resources
@@ -220,18 +220,15 @@ internal object AccessibilityCollector {
             // get screen size in portrait mode
             val portraitScreenSize = with(pixelScreenSize) {
                 if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
-                    Pair(second, first)
+                    second
                 } else {
-                    Pair(first, second)
+                    first
                 }
             }
 
             val portraitDpScreenSize = with(portraitScreenSize) {
                 val density = resources.displayMetrics.density
-                Pair(
-                    (first / density).toInt(),
-                    (second / density).toInt()
-                )
+                (this / density).toInt()
             }
             portraitDpScreenSize
         } catch (e: Throwable) {
