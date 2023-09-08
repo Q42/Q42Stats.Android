@@ -172,11 +172,13 @@ internal object AccessibilityCollector {
      * @return null when the value could not be read
      */
     private fun getSystemIntAsBool(context: Context, name: String): Boolean? = try {
-        Settings.Secure.getInt(
+        val notFoundValue = -9001
+        val value = Settings.Secure.getInt(
             context.contentResolver,
             name,
-            0
-        ) == 1
+            notFoundValue
+        )
+        if (value == notFoundValue) (null) else value == 1
     } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
         null
