@@ -21,7 +21,7 @@ class SampleApplication : Application() {
         Q42Stats.logLevel = Q42StatsLogLevel.Debug
         Q42Stats(
             Q42StatsConfig(
-                firestoreCollectionId = "testCollection",
+                firestoreCollectionId = "testCollection-v1",
                 apiKey = BuildConfig.API_KEY,
                 // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
                 minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
