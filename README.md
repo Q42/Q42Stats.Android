@@ -40,7 +40,7 @@ Add the Jitpack repo and include the library:
                     apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                     firestoreCollectionId = "yourExistingFirestoreCollectionId",
                     // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
-                    minimumSubmitIntervalSeconds = (60 * 60 * 24 * 7.5).toLong()
+                    minimumSubmitIntervalSeconds = 7.days.inWholeSeconds
                 )
             ).runAsync(this.applicationContext)
         }
@@ -136,8 +136,8 @@ Catch Throwable; not Exception. Since Throwabl is the superclass of Exception, t
 lib more resilient to crashes.
 
 For accessibility properties we want to track but could not find a property for, see [DOCUMENTATION.md](DOCUMENTATION.md)
-
-### Setup
+ 
+### Setup for lib development
 
 1. Get the API key
    from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key
