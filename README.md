@@ -40,7 +40,7 @@ Add the Jitpack repo and include the library:
                     apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                     firestoreCollectionId = "yourExistingFirestoreCollectionId",
                     // wait at least 7.5 days between data collections. the extra .5 is for time-of-day randomization
-                    minimumSubmitIntervalSeconds = 7.days.inWholeSeconds
+                    minimumSubmitIntervalSeconds = 7.5.days.inWholeSeconds
                 )
             ).runAsync(this.applicationContext)
         }
