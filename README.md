@@ -27,7 +27,7 @@ Add the Jitpack repo and include the library:
 ## Usage
 
 1. Get the API key
-   from [The Api project](https://github.com/Q42/accessibility-pipeline/tree/main/api). Use this key
+   from [The Api project](https://github.com/Q42/accessibility-data-pipeline/tree/main/api). Use this key
    in the next step.
 
 1. Call `Q42Stats().runAsync(Context)` from anywhere in your app.
