@@ -18,7 +18,13 @@ class SampleApplication : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setStrictMode()
         }
-        Q42Stats.logLevel = Q42StatsLogLevel.Debug
+
+        // Initialize Q42Stats
+        if (BuildConfig.DEBUG) {
+            Q42StatsLogLevel.Verbose
+        } else {
+            Q42StatsLogLevel.Error
+        }
         Q42Stats(
             Q42StatsConfig(
                 firestoreCollectionId = "testCollection-v1",
