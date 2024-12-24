@@ -4,7 +4,7 @@ import android.util.Log
 
 internal object Q42StatsLogger {
     /** logs with lower importance will be ignored */
-    var logLevel = if (BuildConfig.DEBUG) Q42StatsLogLevel.Verbose else Q42StatsLogLevel.Error
+    var logLevel = Q42StatsLogLevel.Error
 
     fun v(tag: String, message: String) {
         if (logLevel <= Q42StatsLogLevel.Verbose) {
