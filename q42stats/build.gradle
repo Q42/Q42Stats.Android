@@ -68,24 +68,6 @@ afterEvaluate {
                 // Applies the component for the release build variant.
                 from components.release
 
-                pom {
-                    // set java source version
-                    properties {
-                        project {
-                            build {
-                                sourceEncoding 'UTF-8'
-                            }
-                        }
-                        maven {
-                            compiler {
-                                source JavaVersion.VERSION_21
-                                target JavaVersion.VERSION_21
-                            }
-                        }
-                    }
-
-                }
-
                 // You can then customize attributes of the publication as shown below.
                 // JitPack will override these value for us, so leave them to the defaults.
                 // Default group is set in the root of this gradle file
