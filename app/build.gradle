@@ -6,15 +6,15 @@ plugins {
 def secretsFileName = "secrets.properties"
 def apikeyPropertiesFile = rootProject.file(secretsFileName)
 def apikeyProperties = new Properties()
-def apiKey
+def q42StatsApiKey
 try {
     apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
-    apiKey = apikeyProperties['apikey']
-    if (apiKey == null) {
-        throw new IllegalStateException("apikey not found in $secretsFileName")
+    q42StatsApiKey = apikeyProperties['Q42_STATS_API_KEY']
+    if (q42StatsApiKey == null) {
+        throw new IllegalStateException("Q42_STATS_API_KEY not found in $secretsFileName")
     }
 } catch (Throwable e) {
-    println("Could not load apiKey. Did you create the $secretsFileName at the root of the project?")
+    println("Could not load Q42_STATS_API_KEY. Did you create the $secretsFileName at the root of the project?")
     throw e
 }
 
@@ -37,7 +37,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField("String", "API_KEY", apiKey)
+        buildConfigField("String", "Q42_STATS_API_KEY", q42StatsApiKey)
 
 
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

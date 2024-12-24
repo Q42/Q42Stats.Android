@@ -28,16 +28,46 @@ Add the Jitpack repo and include the library:
 
 1. Get the API key
    from [The Api project](https://github.com/Q42/accessibility-data-pipeline/tree/main/api). Use this key
-   in the next step.
-
-1. Call `Q42Stats().runAsync(Context)` from anywhere in your app.
+   in the next steps.
+2. Development: Add the api key to your `secrets.properties` file in the root of your project.
+   Contents:
+      ```
+      Q42_STATS_API_KEY="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      ```
+   Make sure this file is ignored by version control.
+3. Use the secrets file in your app/build.gradle. See the Sample build.gradle.
+   ```groovy
+   def secretsFileName = "secrets.properties"
+   def apikeyPropertiesFile = rootProject.file(secretsFileName)
+   def apikeyProperties = new Properties()
+   def q42StatsApiKey
+   try {
+      apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+      q42StatsApiKey = apikeyProperties['Q42_STATS_API_KEY']
+      if (q42StatsApiKey == null) {
+         throw new IllegalStateException("Q42_STATS_API_KEY not found in $secretsFileName")
+      }
+   } catch (Throwable e) {
+      println("Could not load Q42_STATS_API_KEY. Did you create the $secretsFileName at the root of the project?")
+      throw e
+   }
+   
+   [..]
+   
+   android {
+    defaultConfig {
+        buildConfigField("String", "Q42_STATS_API_KEY", q42StatsApiKey)
+    }
+   }
+   ```
+4. Call `Q42Stats().runAsync(Context)` from anywhere in your app.
     ```kotlin
     class SampleApplication : Application() {
         override fun onCreate() {
             super.onCreate()
             Q42Stats(
                 Q42StatsConfig(
-                    apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    apiKey = BuildConfig.Q42_STATS_API_KEY,
                     firestoreCollectionId = "yourExistingFirestoreCollectionId",
                     // wait at least 7.1 days between data collections. the extra .1 is for a tiny bit of time-of-day randomization
                     minimumSubmitIntervalSeconds = 7.1.days.inWholeSeconds
@@ -51,6 +81,13 @@ Add the Jitpack repo and include the library:
 
    It is safe to call this function multiple times, as it will exit immediately if it is already
    running or when a data collection interval has not passed yet.
+4. Continuous Integration / Build server: 
+      Add a build step to generate the secrets.properties file. Github Actions example:
+      ```yaml
+      - name: Access Q42_STATS_API_KEY secret from build file
+         run: echo Q42_STATS_API_KEY=\"${{ secrets.Q42_STATS_API_KEY }}\" > ./secrets.properties
+      ```
+
 
 ### Debug Logging
 
