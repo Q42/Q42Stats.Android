@@ -9,16 +9,21 @@ plugins {
 group = 'com.github.Q42'
 
 android {
-    compileSdkVersion compile_sdk_version
+    namespace = "com.q42.q42stats.library"
 
     defaultConfig {
-        minSdkVersion min_sdk_version
-        targetSdkVersion compile_sdk_version
+        compileSdk compile_sdk_version
+        minSdk min_sdk_version
+        targetSdk compile_sdk_version
 
         buildConfigField("String", "LIB_BUILD_DATE", '"' + new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + '"')
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
@@ -30,8 +35,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
         jvmTarget = jvm_target

@@ -1,0 +1,7 @@
+# NOTE: it seems this file is not picked up by jitpack.iio, the echo does not show up in the build log
+jdk:
+  - openjdk17
+before_install:
+  - echo "q42stats subfolder Hello jitpack.yml before_install q42stats subfolder"
+  - sdk install java 17.0.1-open
+  - sdk use java 17.0.1-open
