@@ -9,6 +9,7 @@ plugins {
 group = 'com.github.Q42'
 
 android {
+    namespace = "com.q42.q42stats.library"
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -19,6 +20,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {

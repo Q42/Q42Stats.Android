@@ -19,6 +19,7 @@ try {
 }
 
 android {
+    namespace = "com.q42.q42stats.sample"
     signingConfigs {
         adhoc {
             storeFile file('../adhoc.jks')
@@ -57,6 +58,10 @@ android {
         jitpack {
             dimension "distribution"
         }
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
