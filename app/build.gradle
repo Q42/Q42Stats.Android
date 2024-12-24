@@ -29,12 +29,12 @@ android {
         }
         // since this is just a demo app, we don't need a release config for the Play Store
     }
-    compileSdk compile_sdk_version
 
     defaultConfig {
         applicationId "com.q42.q42stats.sample"
-        minSdkVersion min_sdk_version
-        targetSdkVersion compile_sdk_version
+        compileSdk compile_sdk_version
+        minSdk min_sdk_version
+        targetSdk compile_sdk_version
         versionCode 1
         versionName "1.0"
 
@@ -47,7 +47,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    flavorDimensions "distribution"
+    flavorDimensions = ["distribution"]
 
     productFlavors {
         local {
