@@ -6,9 +6,11 @@ import android.content.Context.ACCESSIBILITY_SERVICE
 import android.content.Context.CAPTIONING_SERVICE
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
+import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.CaptioningManager
 import androidx.annotation.RequiresApi
@@ -82,7 +84,7 @@ internal object AccessibilityCollector {
                 )
             }
         }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             put(
                 "isAnimationsDisabled",
                 isAnimationsDisabled(context)
@@ -101,6 +103,16 @@ internal object AccessibilityCollector {
                 }
             })
 
+        getScreenSize(context)?.let {
+            put(
+                "screenWidth",
+                it.first
+            )
+            put(
+                "screenHeight",
+                it.second
+            )
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getSystemIntAsBool(
@@ -146,7 +158,7 @@ internal object AccessibilityCollector {
      */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun isMagnificationEnabled(context: Context, serviceNames: List<String>): Boolean? = try {
-        val isMagnificationByTripleTapGesturesEnabled = getSystemIntAsBool(context,"accessibility_display_magnification_enabled") ?: false
+        val isMagnificationByTripleTapGesturesEnabled = getSystemIntAsBool(context, "accessibility_display_magnification_enabled") ?: false
         val isMagnificationByVolumeButtonsEnabled = serviceNames.map { s -> s.lowercase() }.contains("com.example.android.apis.accessibility.magnificationservice")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -154,11 +166,11 @@ internal object AccessibilityCollector {
                 Settings.Secure.getString(context.contentResolver, "accessibility_button_targets").lowercase().contains("com.android.server.accessibility.magnificationcontroller")
 
             isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled || isMagnificationByNavigationButtonEnabled
-        }else{
+        } else {
             isMagnificationByTripleTapGesturesEnabled || isMagnificationByVolumeButtonsEnabled
         }
     } catch (e: Throwable) {
-        Q42StatsLogger.e(TAG, "Could not read magnification. Returning null", e)
+        Q42StatsLogger.w(TAG, "Could not read magnification, user likely has never used magnification before. Returning null.")
         null
     }
 
@@ -182,5 +194,46 @@ internal object AccessibilityCollector {
     } catch (e: Throwable) {
         Q42StatsLogger.e(TAG, "Could not read system int $name. Returning null", e)
         null
+    }
+
+    /**
+     * Gets the screen size in density independent pixels with portrait orientation.
+     *
+     * Note: calculates size given portrait mode.
+     */
+    private fun getScreenSize(context: Context): Pair<Int, Int>? {
+        return try {
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val resources = context.resources
+
+            // get screen size in pixels
+            val pixelScreenSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val windowMetrics = windowManager.currentWindowMetrics
+                with(windowMetrics.bounds) {
+                    Pair(right, bottom)
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                val point = Point()
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay.getRealSize(point)
+                Pair(point.x, point.y)
+            } else {
+                with(resources.displayMetrics) {
+                    Pair(widthPixels, heightPixels)
+                }
+            }
+
+            val portraitDpScreenSize = with(pixelScreenSize) {
+                val density = resources.displayMetrics.density
+                Pair(
+                    (first / density).toInt(),
+                    (second / density).toInt()
+                )
+            }
+            portraitDpScreenSize
+        } catch (e: Throwable) {
+            Q42StatsLogger.e(TAG, "Could not read screen size. Returning null", e)
+            null
+        }
     }
 }
