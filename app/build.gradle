@@ -79,6 +79,7 @@ android {
         }
     }
     compileOptions {
+        // keep in sync with jitpack.yml
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
