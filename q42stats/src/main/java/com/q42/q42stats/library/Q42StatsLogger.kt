@@ -1,3 +1,5 @@
+@Suppress("unused")
+
 package com.q42.q42stats.library
 
 import android.util.Log
@@ -43,5 +45,7 @@ enum class Q42StatsLogLevel {
     Debug,
     Info,
     Warn,
-    Error;
+    Error,
+    /** For completely silent operation */
+    None;
 }

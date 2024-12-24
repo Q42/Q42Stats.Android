@@ -19,7 +19,7 @@ class SampleApplication : Application() {
             setStrictMode()
         }
 
-        // initialize Q42Stats
+        // Initialize Q42Stats
         if (BuildConfig.DEBUG) {
             Q42StatsLogLevel.Verbose
         } else {
